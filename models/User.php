@@ -19,7 +19,7 @@ use yii\web\IdentityInterface;
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
- * @property string $password write-only password
+ * @property string $passphrase write-only password
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -145,22 +145,22 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Validates password
      *
-     * @param string $password password to validate
+     * @param string $passphrase password to validate
      * @return bool if password provided is valid for current user
      */
-    public function validatePassword($password)
+    public function validatePassword($passphrase)
     {
-        return Yii::$app->security->validatePassword($password, $this->password_hash);
+        return Yii::$app->security->validatePassword($passphrase, $this->password_hash);
     }
 
     /**
      * Generates password hash from password and sets it to the model
      *
-     * @param string $password
+     * @param string $passphrase
      */
-    public function setPassword($password)
+    public function setPassword($passphrase)
     {
-        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+        $this->password_hash = Yii::$app->security->generatePasswordHash($passphrase);
     }
 
     /**
