@@ -9,6 +9,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\components\Alert;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 ?>
@@ -21,28 +22,33 @@ AppAsset::register($this);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
+    <link href="https://fonts.googleapis.com/css?family=Saira" rel="stylesheet">
     <?php $this->head() ?>
 </head>
 <body>
 <?php $this->beginBody() ?>
 
 <div class="wrap">
+
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => FALSE,
+    	'renderInnerContainer'=>FALSE,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
+            'class' => 'navbar-fixed-top myNavBar',
         ],
     ]);
+    echo '<span class="pull-left"><img src="'.Url::base().'/img/logo-100.png" alt="JuJu Gaming and Development LLC."></span>';
+    echo '<span class="">JuJu Gaming And Development LLC.</span>';
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'About', 'url' => ['/site/about']],
-        ['label' => 'Contact', 'url' => ['/site/contact']],
+    		['label' => 'Home', 'url' => ['/site/index'],'linkOptions' => ['class' => 'myLinks']],
+    		['label' => 'About', 'url' => ['/site/about'],'linkOptions' => ['class' => 'myLinks']],
+    		['label' => 'Contact', 'url' => ['/site/contact'],'linkOptions' => ['class' => 'myLinks']],
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+    	$menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup'],'linkOptions' => ['class' => 'myLinks']];
+    	$menuItems[] = ['label' => 'Login', 'url' => ['/site/login'],'linkOptions' => ['class' => 'myLinks']];
     } else {
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
@@ -71,7 +77,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; JuJu Gaming and Development LLC.<?= date('Y') ?></p>
 
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
