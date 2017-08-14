@@ -32,15 +32,14 @@ AppAsset::register($this);
 
     <?php
     NavBar::begin([
-        'brandLabel' => FALSE,
+        'brandLabel' => '<div class="pull-left mylogo"><img src="'.Url::base().'/img/logo-50.png" class="img-fluid" alt="JuJu Gaming and Development LLC."> JuJu Gaming And Development LLC.</div>',
     	'renderInnerContainer'=>FALSE,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'navbar-fixed-top myNavBar',
+            'class' => 'myNavBar',
         ],
     ]);
-    echo '<span class="pull-left"><img src="'.Url::base().'/img/logo-100.png" alt="JuJu Gaming and Development LLC."></span>';
-    echo '<span class="">JuJu Gaming And Development LLC.</span>';
+    
     $menuItems = [
     		['label' => 'Home', 'url' => ['/site/index'],'linkOptions' => ['class' => 'myLinks']],
     		['label' => 'About', 'url' => ['/site/about'],'linkOptions' => ['class' => 'myLinks']],
@@ -66,7 +65,7 @@ AppAsset::register($this);
     NavBar::end();
     ?>
 
-    <div class="container">
+    <div class="myContainer">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
