@@ -21,7 +21,7 @@ $this->title = 'JuJu Gaming and Development';
 				        we will integrate imagery and advanced technology to create a website as unique as your business.</p>
 					</div>
 				</div>
-
+<?php echo ChartWidget::widget([]) ; ?> 
     <div class="body-content">
 
         <div class="row">
@@ -76,6 +76,6 @@ $this->title = 'JuJu Gaming and Development';
             </div>
         </div>
 
-		<?php echo ChartWidget::widget([]) ; ?> 
+		
     </div>
 </div>

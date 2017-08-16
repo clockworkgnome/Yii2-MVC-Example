@@ -1,3 +1,11 @@
+<style>
+
+@media screen and (max-width: 500px) {
+	#chartCanvas{
+		display:none;
+	}
+}
+</style>
 
 
 <div class="panel" id="barchart">
@@ -16,8 +24,8 @@ console.log("I am here ...");
 var myCanvas = document.getElementById("chartCanvas");
 myCanvas.width = 850;
 myCanvas.height = 150;
-myCanvas.height =document.getElementById('barchart').clientHeight-50;
-myCanvas.width =document.getElementById('barchart').clientWidth-100;
+//myCanvas.height =document.getElementById('barchart').clientHeight-50;
+//myCanvas.width =document.getElementById('barchart').clientWidth-100;
 var ctx = myCanvas.getContext("2d");
  var myPieCanvas= document.getElementById("pieCanvas");
  myPieCanvas.height=50;
@@ -34,7 +42,9 @@ var ctx = myCanvas.getContext("2d");
 
 	function resizeCanvas()
 	{
+
 		myCanvas.width =document.getElementById('barchart').clientWidth-100;
+		
 		 myPieCanvas.width =document.getElementById('barchart').clientWidth;
 	}
 // ctx: reference to the drawing context
