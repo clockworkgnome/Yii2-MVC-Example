@@ -77,6 +77,5 @@ $this->title = 'JuJu Gaming and Development';
         </div>
 
 		<?php echo ChartWidget::widget([]) ; ?> 
-		<?php echo KonbonWidget::widget([]) ; ?> 
     </div>
 </div>
