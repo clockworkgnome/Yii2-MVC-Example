@@ -49,7 +49,7 @@ class DefaultController extends Controller
 			
 		}else{
 			// UPDATE (table name, column values, condition)
-			if(Yii::$app->db->createCommand()->update('itemStatus', ['projectID' => $projectID,'catagory'=>$catagory], "itemID=$itemID")->execute()){
+			if(Yii::$app->db->createCommand()->update('itemStatus', ['projectID' => $projectID,'catagory'=>$catagory,'status'=>'doing'], "itemID=$itemID")->execute()){
 				echo "success";
 			}else{
 				echo "failed";

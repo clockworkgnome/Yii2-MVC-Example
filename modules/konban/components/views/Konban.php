@@ -66,9 +66,9 @@ foreach($projects as $p) {
 					var itemID=ui.item[0].id;
 					var projectID = composit.replace( /^\D+/g, '');
 					var catagory= composit.replace(/[0-9]/g, '');
-					//console.log("itemID"+itemID);
-					//console.log("projectID"+projectID);
-					//console.log("catagory"+catagory);
+					console.log("itemID"+itemID);
+					console.log("projectID"+projectID);
+					console.log("catagory"+catagory);
 					
 					$.ajax({
 			          url: "<?= Url::toRoute("/konban/default/updateitem")?>",
@@ -314,8 +314,15 @@ foreach($projects as $p) {
 							->where(['itemID' => $td["itemID"]])
 							->one();
 								
-							echo '<li class="ui-state-default cardItem" id="'.$td["itemID"].'">
-										'.$todoItems["content"].'
+							echo '<li id="'.$td["itemID"].'">
+
+<div class="panel panel-default">
+  <div class="panel-heading">'.$todoItems["title"].'</div>
+  <div class="panel-body" style="background-color:'.$td["urgency"].';">
+    '.$todoItems["content"].'
+  </div>
+</div>
+										
 								</li>';
 							
 						}
