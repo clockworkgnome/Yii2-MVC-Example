@@ -3,6 +3,7 @@
 namespace app\modules\konban\models;
 
 use Yii;
+use app\models\User;
 
 /**
  * This is the model class for table "items".
@@ -80,4 +81,5 @@ class Items extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Messages::className(), ['itemID' => 'itemID']);
     }
+
 }

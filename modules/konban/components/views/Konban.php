@@ -1,5 +1,5 @@
 <?php 
-
+use yii\helpers\Url;
 $myDate= new dateTime();
 $myDateString = $myDate->format('Y-m-d H:i');
 ?>
@@ -40,7 +40,13 @@ padding: 5px 0 15px 0;
 
 }
   </style>
-
+<?php 
+//this will mak ethe list for javascript sortable connection
+$mysortables="#sortable1, #sortable10";
+foreach($projects as $p) {
+	$mysortables=$mysortables.", #plan".$p["projectID"].","." #develop".$p["projectID"].","." #test".$p["projectID"].","." #deploy".$p["projectID"];
+}
+?>
   <script>
   //this timer give the page time to load JUI.js
   setTimeout(function(){
@@ -49,7 +55,7 @@ padding: 5px 0 15px 0;
 		    $( "#pannelSort" ).sortable();
 		    $( "#pannelSort" ).disableSelection();
 		    //this will dynamically get all the ids of the item lists and connect them
-		    $( "#sortable1, #sortable2, #sortable3, #sortable4, #sortable5, #sortable6, #sortable7, #sortable8, #sortable9, #sortable10" ).sortable({
+		    $( "<?=$mysortables?>" ).sortable({
     		    connectWith: ".connectedSortable",
     		    receive: function( event, ui ) {
 					console.log(event);
@@ -60,16 +66,7 @@ padding: 5px 0 15px 0;
 		  } );
 		  
  },500);
-  
-  //this fuction is for the auto complete too look up team mates when creating a project
-  $( function() {
-	    var availableTags = <?= $userNamesList ?>;
-	    $( "#userlookup" ).autocomplete({
-	      source: availableTags
-	    });
-	  } );
-  
-  //this is the code for the add team mate button on create a new project modal
+//this is the code for the add team mate button on create a new project modal
   function addTeamMember(){
 	  var userName= $("#userlookup").val();
 	  var currentTeam=$("#teamMembers").val();
@@ -81,10 +78,98 @@ padding: 5px 0 15px 0;
   //this is the code for the project deadline date picker
     $( function() {
     	$( "#deadline" ).datepicker();
+    	$( "#deadline" ).datepicker( "option", "dateFormat", "yy-mm-dd");
+        
   } );
+  //this is to set the project id when creating a new item
+  function changeProjectID(myID){
+	  $("#projectID").val(myID);
+  }
+  
+  
+  //this is for the save item button on the doing section
+  function saveDoingItem(){
+	  //alert("I am here");
+  		var doingitemstatus=$("#doingitemstatus").val();
+  		var projectID=$("#projectID").val();
+  		var doingitemcreated=$("#doingitemcreated").val();
+  		var doingitemupdated=$("#doingitemupdated").val();
+  		var doingitemownerID=$("#doingitemownerID").val();
+  		var doingitemcatagory=$("#doingitemcatagory").val();
+  		var doingitemurgency=$("#doingitemurgency").val();
+  		var doingitemtitle=$("#doingitemtitle").val();
+  		var doingitemcontent=$("#doingitemcontent").val();
+  
+  	$.ajax({
+          url: "<?= Url::toRoute("/konban/default/adddoingitem")?>",
+          data: {
+          'doingitemstatus':doingitemstatus,
+          'projectID':projectID,
+          'doingitemcreated':doingitemcreated,
+          'doingitemupdated':doingitemupdated,
+          'doingitemownerID':doingitemownerID,
+          'doingitemcatagory':doingitemcatagory,
+          'doingitemurgency':doingitemurgency,
+          'doingitemtitle':doingitemtitle,
+          'doingitemcontent':doingitemcontent,
+          },
+          context: document.body,
+          type: "GET",
+          success: function(data) {
+				//do stuff with data
+				var mydata=data.split(",");
+				if(mydata[0]==="saved"){
+					$('#adddoingitem').modal('toggle');
+					console.log('#'+mydata[1]);
+					$('#'+mydata[1]).append(mydata[2]);
+					
+				}else{
+					$('#doingItemErr').html("<p>"+data+"</p>");
+				}
+          }
+        });
+};
+  
+  
+  //this is for the save button on the new projects form 
+  function saveProject(){
+	  //alert("I am here");
+  	var myprojectName=$("#projectName").val();
+  	var myteamMembers=$("#teamMembers").val();
+  	var mydeadline=$("#deadline").val();
+  	var mycreated=$("#created").val();
+  
+  	$.ajax({
+          url: "<?= Url::toRoute("/konban/default/addproject")?>",
+          data: {'projectName':myprojectName,'teamMembers':myteamMembers,'deadline':mydeadline,'created':mycreated},
+          context: document.body,
+          type: "GET",
+          success: function(data) {
+				//do stuff with data
+				console.log("my string"+data.substring(0,5));
+				if(data.substring(0,5)==="saved"){
+					$('#addProjectMod').modal('toggle');
+					$('#pannelSort').append(data);
+				}else{
+					$('#newProjectErr').html("<p>"+data+"</p>");
+				}
+          }
+        });
+};
+  
+  //this fuction is for the auto complete too look up team mates when creating a project
+  $( function() {
+	    var availableTags = <?= $userNamesList ?>;
+	    $( "#userlookup" ).autocomplete({
+	      source: availableTags
+	    });
+	  } );
+  
+  
   </script>
 </head>
 <body>
+<div id="myScripts"></div>
 <!-- new project Modal -->
 <div class="modal fade" id="addProjectMod" tabindex="-1" role="dialog" aria-labelledby="AddProjectlabel">
   <div class="modal-dialog" role="document">
@@ -122,17 +207,70 @@ padding: 5px 0 15px 0;
     			<input class="form-control" type="text" id="deadline">
   			</div>
 		</div>
-		<input type="hidden" name="created" value="<?= $myDateString ?>">
+		<input type="hidden" id="created" value="<?= $myDateString ?>">
+		<div id="newProjectErr"></div>
 			<!-- this ends the form -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span> Save Project</button>
+        <button type="button" class="btn btn-primary" id="newProjectSave" onclick="saveProject()"><span class="glyphicon glyphicon-floppy-disk"></span> Save Project</button>
       </div>
     </div>
   </div>
 </div>
 <!-- end new project Modal -->
+<!-- new item Modal -->
+<div class="modal fade" id="adddoingitem" tabindex="-1" role="dialog" aria-labelledby="additemlabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="additemlabel">Add Item</h4>
+      </div>
+      <div class="modal-body">
+      	<!-- this begins the form -->
+      	<div class="form-group">
+    		<label for="catagory">Select a catagory:</label>
+    		<select class="form-control" id="doingitemcatagory">
+      			<option>Plan</option>
+      			<option>Develop</option>
+      			<option>Test</option>
+      			<option>Deploy</option>
+    		</select>
+  		</div>
+  		<div class="form-group row">
+  			<label for="urgency" class="col-sm-4 col-md-4 col-lg-4 col-form-label">urgency:</label>
+  			<div class="col-sm-8 col-md-8 col-lg-8 ">
+    			<input class="form-control" type="color" id="doingitemurgency" value="#FFFFFF">
+  			</div>
+		</div>
+      	<div class="form-group row">
+  			<label for="title" class="col-sm-4 col-md-4 col-lg-4 col-form-label">Title:</label>
+  			<div class="col-sm-8 col-md-8 col-lg-8 ">
+    			<input class="form-control" type="text" id="doingitemtitle">
+  			</div>
+		</div>
+		<div class="form-group">
+    		<label for="content">Content:</label>
+    		<textarea class="form-control" id="doingitemcontent" rows="3"></textarea>
+  		</div>
+  		<input type="hidden" id="doingitemstatus" value="doing">
+		<input type="hidden" id="projectID" value="">
+		<input type="hidden" id="doingitemcreated" value="<?= $myDateString ?>">
+		<input type="hidden" id="doingitemupdated" value="<?= $myDateString ?>">
+		<input type="hidden" id="doingitemownerID" value="<?php echo Yii::$app->user->id;?>">
+		
+		<div id="doingItemErr"></div>
+			<!-- this ends the form -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="newProjectSave" onclick="saveDoingItem()"><span class="glyphicon glyphicon-floppy-disk"></span> Save Item</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end new item Modal -->
 <div class="row">
 	<!-- this is the todo pannel -->
 	<div class="col-sm-2 col-md-2 col-lg-2 padding-0">
@@ -143,11 +281,7 @@ padding: 5px 0 15px 0;
           	<div class="panel-body">
 
                 <ul id="sortable1" class="connectedSortable MyLists">
-                 <li class="ui-state-default cardItem">Item 1</li>
-                 <li class="ui-state-default cardItem">Item 2</li>
-                 <li class="ui-state-default cardItem">Item 3</li>
-                 <li class="ui-state-default cardItem">Item 4</li>
-                 <li class="ui-state-default cardItem">Item 5</li>
+
                 </ul>
  
           	</div>
@@ -157,7 +291,7 @@ padding: 5px 0 15px 0;
 	<div class="col-sm-8 col-md-8 col-lg-8 padding-0">
 	
 		<div class="panel panel-default">
-  			<div class="panel-heading nopadds">
+  			<div class="panel-heading nopadds" id="doinghead">
     			<span class="panel-title">Doing</span>
     			<button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#addProjectMod">
       				<span class="glyphicon glyphicon-file"></span> New Project
@@ -166,8 +300,177 @@ padding: 5px 0 15px 0;
           	<div class="panel-body">
           		<!-- This begins the sortable pannels -->
           		<ul id="pannelSort">
-          			
-    				<!-- this is a project pannel -->
+          			<?php 
+          			foreach($projects as $p) {
+          				//var_dump($p);
+          				
+          				echo'
+					<li>
+        				<div class="panel panel-default">
+                  			<div class="panel-heading">
+                    			<span class="panel-title">
+                    				<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+                    				'.$p["name"].'
+                    			</span>
+								<button type="button" onclick="changeProjectID('.$p["projectID"].');" class="btn btn-default pull-right" data-toggle="modal" data-target="#adddoingitem">
+      								<span class="glyphicon glyphicon-list-alt"></span> Add Item
+    							</button>
+                  			</div>
+                          	<div class="panel-body">
+                          		<!--project catagories -->
+								
+                          		<div class="row">
+                          		
+                              		<!--catagorie start -->
+                              		<div class="col-sm-3 col-md-3 col-lg-3 padding-0">
+        								<div class="panel panel-default">
+                                          <div class="panel-heading">Plan</div>
+                                          <div class="panel-body">';
+					          				$plans = (new \yii\db\Query())
+					          				->select(['itemID','urgency'])
+					          				->from('itemStatus')
+					          				->where(['projectID' => $p["projectID"],'catagory'=>'Plan','status'=>'doing'])
+					          				->all();
+					          		echo '<ul id="plan'.$p["projectID"].'" class="connectedSortable MyLists">';
+					          				
+					          				foreach($plans as $pl){
+					          					//var_dump($pl);
+					          					$planItems = (new \yii\db\Query())
+					          					->select(['*'])
+					          					->from('items')
+					          					->where(['itemID' => $pl["itemID"]])
+					          					->one();
+					          					
+					          					echo '<li class="ui-state-default cardItem" id="'.$pl["itemID"].'">
+														'.$planItems["content"].'
+													</li>';
+					          					
+					          					}
+					
+                           	 echo '       </ul>
+										</div>
+                                        </div>
+                                    </div>
+    								<!--catagorie end -->
+    								<!--catagorie start -->
+                              		<div class="col-sm-3 col-md-3 col-lg-3 padding-0">
+        								<div class="panel panel-default">
+                                          <div class="panel-heading">Develop</div>
+                                          <div class="panel-body">';
+					          				$plans = (new \yii\db\Query())
+					          				->select(['itemID','urgency'])
+					          				->from('itemStatus')
+					          				->where(['projectID' => $p["projectID"],'catagory'=>'Develop','status'=>'doing'])
+					          				->all();
+					          		echo '<ul id="develop'.$p["projectID"].'" class="connectedSortable MyLists">';
+					          				
+					          				foreach($plans as $pl){
+					          					//var_dump($pl);
+					          					$planItems = (new \yii\db\Query())
+					          					->select(['*'])
+					          					->from('items')
+					          					->where(['itemID' => $pl["itemID"]])
+					          					->one();
+					          					
+					          					echo '<li class="ui-state-default cardItem" id="'.$pl["itemID"].'">
+														'.$planItems["content"].'
+													</li>';
+					          					
+					          					}
+					
+                           	 echo '       </ul>
+
+                                          </div>
+                                        </div>
+                                    </div>
+    								<!--catagorie end -->
+    								<!--catagorie start -->
+                              		<div class="col-sm-3 col-md-3 col-lg-3 padding-0">
+        								<div class="panel panel-default">
+                                          <div class="panel-heading">Test</div>
+                                          <div class="panel-body">';
+					          				$plans = (new \yii\db\Query())
+					          				->select(['itemID','urgency'])
+					          				->from('itemStatus')
+					          				->where(['projectID' => $p["projectID"],'catagory'=>'Test','status'=>'doing'])
+					          				->all();
+					          		echo '<ul id="test'.$p["projectID"].'" class="connectedSortable MyLists">';
+					          				
+					          				foreach($plans as $pl){
+					          					//var_dump($pl);
+					          					$planItems = (new \yii\db\Query())
+					          					->select(['*'])
+					          					->from('items')
+					          					->where(['itemID' => $pl["itemID"]])
+					          					->one();
+					          					
+					          					echo '<li class="ui-state-default cardItem" id="'.$pl["itemID"].'">
+														'.$planItems["content"].'
+													</li>';
+					          					
+					          					}
+					
+                           	 echo '       </ul>
+
+                                          </div>
+                                        </div>
+                                    </div>
+    								<!--catagorie end -->
+    								<!--catagorie start -->
+                              		<div class="col-sm-3 col-md-3 col-lg-3 padding-0">
+        								<div class="panel panel-default">
+                                          <div class="panel-heading">Deploy</div>
+                                          <div class="panel-body">';
+					          				$plans = (new \yii\db\Query())
+					          				->select(['itemID','urgency'])
+					          				->from('itemStatus')
+					          				->where(['projectID' => $p["projectID"],'catagory'=>'Deploy','status'=>'doing'])
+					          				->all();
+					          		echo '<ul id="deploy'.$p["projectID"].'" class="connectedSortable MyLists">';
+					          				
+					          				foreach($plans as $pl){
+					          					//var_dump($pl);
+					          					$planItems = (new \yii\db\Query())
+					          					->select(['*'])
+					          					->from('items')
+					          					->where(['itemID' => $pl["itemID"]])
+					          					->one();
+					          					
+					          					echo '<li class="ui-state-default cardItem" id="'.$pl["itemID"].'">
+														'.$planItems["content"].'
+													</li>';
+					          					
+					          					}
+					
+                           	 echo '       </ul>
+
+                                          </div>
+                                        </div>
+                                    </div>
+    								<!--catagorie end -->
+								</div>
+								<!--end project catagories -->
+								<!--project details-->
+								<div class="row">
+									<span class="well"> Created:'.$p["dateCreated"].'</span>
+									<span class="well"> Due:'.$p["deadline"].'</span>
+									<span class="well">Project Members:'.$p["members"].'</span>
+								</div>
+                          	</div>
+                		</div>
+            		</li>
+            		<!-- end project pannel -->
+
+
+
+
+
+
+';
+          					
+          			}
+          			?>
+    				<!-- this is a project pannel 
     				<li>
         				<div class="panel panel-default">
                   			<div class="panel-heading">
@@ -177,10 +480,10 @@ padding: 5px 0 15px 0;
                     			</h3>
                   			</div>
                           	<div class="panel-body">
-                          		<!--project catagories -->
+                          		<!--project catagories 
                           		<div class="row">
                           		
-                              		<!--catagorie start -->
+                              		<!--catagorie start 
                               		<div class="col-sm-3 col-md-3 col-lg-3 padding-0">
         								<div class="panel panel-default">
                                           <div class="panel-heading">Plan</div>
@@ -195,8 +498,8 @@ padding: 5px 0 15px 0;
                                           </div>
                                         </div>
                                     </div>
-    								<!--catagorie end -->
-    								<!--catagorie start -->
+    								<!--catagorie end 
+    								<!--catagorie start 
                               		<div class="col-sm-3 col-md-3 col-lg-3 padding-0">
         								<div class="panel panel-default">
                                           <div class="panel-heading">Develop</div>
@@ -211,8 +514,8 @@ padding: 5px 0 15px 0;
                                           </div>
                                         </div>
                                     </div>
-    								<!--catagorie end -->
-    								<!--catagorie start -->
+    								<!--catagorie end 
+    								<!--catagorie start 
                               		<div class="col-sm-3 col-md-3 col-lg-3 padding-0">
         								<div class="panel panel-default">
                                           <div class="panel-heading">Test</div>
@@ -227,8 +530,8 @@ padding: 5px 0 15px 0;
                                           </div>
                                         </div>
                                     </div>
-    								<!--catagorie end -->
-    								<!--catagorie start -->
+    								<!--catagorie end 
+    								<!--catagorie start 
                               		<div class="col-sm-3 col-md-3 col-lg-3 padding-0">
         								<div class="panel panel-default">
                                           <div class="panel-heading">Deploy</div>
@@ -243,97 +546,14 @@ padding: 5px 0 15px 0;
                                           </div>
                                         </div>
                                     </div>
-    								<!--catagorie end -->
+    								<!--catagorie end 
 								</div>
-								<!--end project catagories -->
+								<!--end project catagories 
                           	</div>
                 		</div>
             		</li>
             		<!-- end project pannel -->
             		
-    				<!-- this is a project pannel -->
-    				<li>
-        				<div class="panel panel-default">
-                  			<div class="panel-heading">
-                    			<h3 class="panel-title">
-                    			<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
-                    			project2
-                    			</h3>
-                  			</div>
-                          	<div class="panel-body">
-                                <!--project catagories -->
-                          		<div class="row">
-                          		
-                              		<!--catagorie start -->
-                              		<div class="col-sm-3 col-md-3 col-lg-3 padding-0">
-        								<div class="panel panel-default">
-                                          <div class="panel-heading">Plan</div>
-                                          <div class="panel-body">
-                                            <ul id="sortable6" class="connectedSortable MyLists">
-                                             <li class="ui-state-default cardItem">Item 1</li>
-                                             <li class="ui-state-default cardItem">Item 2</li>
-                                             <li class="ui-state-default cardItem">Item 3</li>
-                                             <li class="ui-state-default cardItem">Item 4</li>
-                                             <li class="ui-state-default cardItem">Item 5</li>
-                                            </ul>
-                                          </div>
-                                        </div>
-                                    </div>
-    								<!--catagorie end -->
-    								<!--catagorie start -->
-                              		<div class="col-sm-3 col-md-3 col-lg-3 padding-0">
-        								<div class="panel panel-default">
-                                          <div class="panel-heading">Develop</div>
-                                          <div class="panel-body">
-                                            <ul id="sortable7" class="connectedSortable MyLists">
-                                             <li class="ui-state-default cardItem">Item 1</li>
-                                             <li class="ui-state-default cardItem">Item 2</li>
-                                             <li class="ui-state-default cardItem">Item 3</li>
-                                             <li class="ui-state-default cardItem">Item 4</li>
-                                             <li class="ui-state-default cardItem">Item 5</li>
-                                            </ul>
-                                          </div>
-                                        </div>
-                                    </div>
-    								<!--catagorie end -->
-    								<!--catagorie start -->
-                              		<div class="col-sm-3 col-md-3 col-lg-3 padding-0">
-        								<div class="panel panel-default">
-                                          <div class="panel-heading">Test</div>
-                                          <div class="panel-body">
-                                            <ul id="sortable8" class="connectedSortable MyLists">
-                                             <li class="ui-state-default cardItem">Item 1</li>
-                                             <li class="ui-state-default cardItem">Item 2</li>
-                                             <li class="ui-state-default cardItem">Item 3</li>
-                                             <li class="ui-state-default cardItem">Item 4</li>
-                                             <li class="ui-state-default cardItem">Item 5</li>
-                                            </ul>
-                                          </div>
-                                        </div>
-                                    </div>
-    								<!--catagorie end -->
-    								<!--catagorie start -->
-                              		<div class="col-sm-3 col-md-3 col-lg-3 padding-0">
-        								<div class="panel panel-default">
-                                          <div class="panel-heading">Deploy</div>
-                                          <div class="panel-body">
-                                            <ul id="sortable9" class="connectedSortable MyLists">
-                                             <li class="ui-state-default cardItem">Item 1</li>
-                                             <li class="ui-state-default cardItem">Item 2</li>
-                                             <li class="ui-state-default cardItem">Item 3</li>
-                                             <li class="ui-state-default cardItem">Item 4</li>
-                                             <li class="ui-state-default cardItem">Item 5</li>
-                                            </ul>
-                                          </div>
-                                        </div>
-                                    </div>
-    								<!--catagorie end -->
-								</div>
-								<!--end project catagories -->
-                          	</div>
-                		</div>
-            		</li>
-            		<!-- end project pannel -->
             		
  				</ul>
  				<!-- This ends the sortable pannels -->
@@ -349,11 +569,7 @@ padding: 5px 0 15px 0;
   			</div>
           	<div class="panel-body">
             	  <ul id="sortable10" class="connectedSortable MyLists">
-                  <li class="ui-state-default cardItem">Item 1</li>
-                  <li class="ui-state-default cardItem">Item 2</li>
-                  <li class="ui-state-default cardItem">Item 3</li>
-                  <li class="ui-state-default cardItem">Item 4</li>
-                  <li class="ui-state-default cardItem">Item 5</li>
+
                 </ul>
           	</div>
 		</div>
