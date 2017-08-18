@@ -58,12 +58,36 @@ foreach($projects as $p) {
 		    $( "<?=$mysortables?>" ).sortable({
     		    connectWith: ".connectedSortable",
     		    receive: function( event, ui ) {
-					console.log(event);
-					alert(event.target.id);
-					console.log(ui);
-        		    }
-		    }).disableSelection();
-		  } );
+					//console.log(event);
+					//console.log(ui);
+					//console.log("catagoryProjectNumber="+event.target.id);
+					//console.log("itemID="+ui.item[0].id);
+					var composit=event.target.id;
+					var itemID=ui.item[0].id;
+					var projectID = composit.replace( /^\D+/g, '');
+					var catagory= composit.replace(/[0-9]/g, '');
+					//console.log("itemID"+itemID);
+					//console.log("projectID"+projectID);
+					//console.log("catagory"+catagory);
+					
+					$.ajax({
+			          url: "<?= Url::toRoute("/konban/default/updateitem")?>",
+			          data: {
+			          'itemID':itemID,
+			          'projectID':projectID,
+			          'catagory':catagory,
+			          },
+			          context: document.body,
+			          type: "GET",
+			          success: function(data) {
+							//do stuff with data
+							console.log(data);
+			          }
+			        });
+								
+			        		    }
+					    }).disableSelection();
+					  } );
 		  
  },500);
 //this is the code for the add team mate button on create a new project modal

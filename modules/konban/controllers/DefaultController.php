@@ -3,7 +3,7 @@ namespace app\modules\konban\controllers;
 use app\modules\konban\models\Projects;
 use app\modules\konban\models\Items;
 use app\modules\konban\models\ItemsStatus;
-
+use yii;
 use yii\web\Controller;
 
 class DefaultController extends Controller
@@ -16,6 +16,19 @@ class DefaultController extends Controller
 	//public $layout = false;
 	public function actionIndex(){
 		return $this->render('index.php',[]);
+	}
+	
+	public function actionUpdateitem(){
+		
+		$itemID=$_REQUEST["itemID"];
+		$projectID=$_REQUEST["projectID"];
+		$catagory=$_REQUEST["catagory"];
+		// UPDATE (table name, column values, condition)
+		if(Yii::$app->db->createCommand()->update('itemStatus', ['projectID' => $projectID,'catagory'=>$catagory], "itemID=$itemID")->execute()){
+			echo "success";
+		}else{
+			echo "failed";
+		}
 	}
 	
 	public function actionAdddoingitem(){
