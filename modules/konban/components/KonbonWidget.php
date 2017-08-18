@@ -31,6 +31,18 @@ class KonbonWidget extends Widget{
 		->from('projects')
 		->all();
 		
+		$todo=(new \yii\db\Query())
+		->select(['*'])
+		->from('itemStatus')
+		->where(['status'=>'todo'])
+		->all();
+		
+		$done=(new \yii\db\Query())
+		->select(['*'])
+		->from('itemStatus')
+		->where(['status'=>'done'])
+		->all();
+		
 		$userNamesList=$userNamesList."]";
 		Yii::$app->view->registerCssFile('js/jqueryui/jquery-ui.min.css');
 		Yii::$app->view->registerJsFile('js/jqueryui/external/jquery/jquery.js',[ 'position' => \yii\web\View::POS_HEAD]);
@@ -38,6 +50,8 @@ class KonbonWidget extends Widget{
 		return $this->render('Konban',[
 				'userNamesList'=>$userNamesList,
 				'projects'=>$projects,
+				'mytodo'=>$todo,
+				'mydone'=>$done,
 		]);
 	}
 }

@@ -23,11 +23,37 @@ class DefaultController extends Controller
 		$itemID=$_REQUEST["itemID"];
 		$projectID=$_REQUEST["projectID"];
 		$catagory=$_REQUEST["catagory"];
-		// UPDATE (table name, column values, condition)
-		if(Yii::$app->db->createCommand()->update('itemStatus', ['projectID' => $projectID,'catagory'=>$catagory], "itemID=$itemID")->execute()){
-			echo "success";
+		if($catagory=="todo"){
+			if(Yii::$app->db->createCommand()->update('itemStatus', [
+					'projectID' => '-1',
+					'catagory'=>'',
+					'status'=>$catagory
+					
+			], "itemID=$itemID")->execute()){
+				echo "sucess";
+			}else{
+				echo "failed";
+			}
+			
+		}elseif ($catagory=="done"){
+			if(Yii::$app->db->createCommand()->update('itemStatus', [
+					'projectID' => '-1',
+					'catagory'=>'',
+					'status'=>$catagory
+					
+			], "itemID=$itemID")->execute()){
+				echo "sucess";
+			}else{
+				echo "failed";
+			}
+			
 		}else{
-			echo "failed";
+			// UPDATE (table name, column values, condition)
+			if(Yii::$app->db->createCommand()->update('itemStatus', ['projectID' => $projectID,'catagory'=>$catagory], "itemID=$itemID")->execute()){
+				echo "success";
+			}else{
+				echo "failed";
+			}
 		}
 	}
 	

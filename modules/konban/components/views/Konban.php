@@ -42,7 +42,7 @@ padding: 5px 0 15px 0;
   </style>
 <?php 
 //this will mak ethe list for javascript sortable connection
-$mysortables="#sortable1, #sortable10";
+$mysortables="#todo, #done";
 foreach($projects as $p) {
 	$mysortables=$mysortables.", #plan".$p["projectID"].","." #develop".$p["projectID"].","." #test".$p["projectID"].","." #deploy".$p["projectID"];
 }
@@ -304,8 +304,22 @@ foreach($projects as $p) {
   			</div>
           	<div class="panel-body">
 
-                <ul id="sortable1" class="connectedSortable MyLists">
-
+                <ul id="todo" class="connectedSortable MyLists">
+					<?php 
+						foreach ($mytodo as $td){
+							
+							$todoItems = (new \yii\db\Query())
+							->select(['*'])
+							->from('items')
+							->where(['itemID' => $td["itemID"]])
+							->one();
+								
+							echo '<li class="ui-state-default cardItem" id="'.$td["itemID"].'">
+										'.$todoItems["content"].'
+								</li>';
+							
+						}
+					?>
                 </ul>
  
           	</div>
@@ -592,8 +606,23 @@ foreach($projects as $p) {
     			<h3 class="panel-title">Done</h3>
   			</div>
           	<div class="panel-body">
-            	  <ul id="sortable10" class="connectedSortable MyLists">
-
+            	  <ul id="done" class="connectedSortable MyLists">
+					<?php
+					foreach ($mydone as $d){
+						
+						$doneItems = (new \yii\db\Query())
+						->select(['*'])
+						->from('items')
+						->where(['itemID' => $d["itemID"]])
+						->one();
+						
+						echo '<li class="ui-state-default cardItem" id="'.$d["itemID"].'">
+										'.$doneItems["content"].'
+								</li>';
+						
+					}
+				
+					?>
                 </ul>
           	</div>
 		</div>
