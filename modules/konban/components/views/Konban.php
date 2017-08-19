@@ -1,4 +1,7 @@
 <?php 
+//NOTES:
+//The only element ID on this page with out a prefix should be an item!
+// only item elements have pure integers for ID's 
 use yii\helpers\Url;
 $myDate= new dateTime();
 $myDateString = $myDate->format('Y-m-d H:i');
@@ -13,7 +16,7 @@ padding: 5px 0 15px 0;
 }
 .MyLists{
     border: 1px solid #eee;
-    width: 142px;
+    width: 100%;
     min-height: 20px;
     list-style-type: none;
     margin: 0;
@@ -109,7 +112,26 @@ foreach($projects as $p) {
   function changeProjectID(myID){
 	  $("#projectID").val(myID);
   }
-  
+
+  //this is the code to remove an item 
+  function removeitem(itemID){
+	  if(confirm("Are you sure you want to permanently delete this item?")){
+        	  $.ajax({
+                  url: "<?= Url::toRoute("/konban/default/removeitem")?>",
+                  data: {
+                  'itemID':itemID,
+                  },
+                  context: document.body,
+                  type: "GET",
+                  success: function(data) {
+        				//do stuff with data
+                	  		$("#"+itemID).remove();
+        
+                  }
+                });
+	  }
+	  
+  }
   
   //this is for the save item button on the doing section
   function saveDoingItem(){
@@ -317,10 +339,40 @@ foreach($projects as $p) {
 							echo '<li id="'.$td["itemID"].'">
 
 <div class="panel panel-default">
-  <div class="panel-heading">'.$todoItems["title"].'</div>
-  <div class="panel-body" style="background-color:'.$td["urgency"].';">
-    '.$todoItems["content"].'
-  </div>
+    <div class="panel-heading">
+        '.$todoItems["title"].'
+        <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$td["itemID"].')">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </div>
+
+    <div class="panel-body" style="background-color:'.$td["urgency"].';">
+        '.$todoItems["content"].'
+    </div>
+
+    <div class="panel-footer">
+       <div class="btn-group" role="group" aria-label="options">
+                <button type="button" class="btn btn-xs btn-primary" onclick="addMessage('.$td["itemID"].')">
+                    <span class="glyphicon glyphicon-comment"></span>
+                </button>
+
+                <button type="button" class="btn btn-xs btn-primary" onclick="viewMessage('.$td["itemID"].')">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                </button>
+
+                <button type="button" class="btn btn-xs btn-primary" onclick="addTeam('.$td["itemID"].')">
+                    <span class="glyphicon glyphicon-user"></span>
+                </button>
+
+                <button type="button" class="btn btn-xs btn-primary" onclick="editItem('.$td["itemID"].')">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+
+                <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$td["itemID"].')">
+                    <span class="glyphicon glyphicon-open-file"></span>
+                </button>
+        </div>
+    </div>
 </div>
 										
 								</li>';
@@ -386,9 +438,46 @@ foreach($projects as $p) {
 					          					->where(['itemID' => $pl["itemID"]])
 					          					->one();
 					          					
-					          					echo '<li class="ui-state-default cardItem" id="'.$pl["itemID"].'">
-														'.$planItems["content"].'
-													</li>';
+					          					echo '<li id="'.$pl["itemID"].'">
+			              
+<div class="panel panel-default">
+    <div class="panel-heading">
+        '.$planItems["title"].'
+        <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$pl["itemID"].')">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </div>
+							    
+    <div class="panel-body" style="background-color:'.$pl["urgency"].';">
+        '.$planItems["content"].'
+    </div>
+      
+    <div class="panel-footer">
+       <div class="btn-group" role="group" aria-label="options">
+                <button type="button" class="btn btn-xs btn-primary" onclick="addMessage('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-comment"></span>
+                </button>
+      
+                <button type="button" class="btn btn-xs btn-primary" onclick="viewMessage('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                </button>
+      
+                <button type="button" class="btn btn-xs btn-primary" onclick="addTeam('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-user"></span>
+                </button>
+	      
+                <button type="button" class="btn btn-xs btn-primary" onclick="editItem('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                      
+                <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-open-file"></span>
+                </button>
+        </div>
+    </div>
+</div>
+                      
+								</li>';
 					          					
 					          					}
 					
@@ -417,9 +506,46 @@ foreach($projects as $p) {
 					          					->where(['itemID' => $pl["itemID"]])
 					          					->one();
 					          					
-					          					echo '<li class="ui-state-default cardItem" id="'.$pl["itemID"].'">
-														'.$planItems["content"].'
-													</li>';
+					          					echo '<li id="'.$pl["itemID"].'">
+				    
+<div class="panel panel-default">
+    <div class="panel-heading">
+        '.$planItems["title"].'
+        <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$pl["itemID"].')">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </div>
+            
+    <div class="panel-body" style="background-color:'.$pl["urgency"].';">
+        '.$planItems["content"].'
+    </div>
+  	    
+    <div class="panel-footer">
+       <div class="btn-group" role="group" aria-label="options">
+                <button type="button" class="btn btn-xs btn-primary" onclick="addMessage('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-comment"></span>
+                </button>
+              
+                <button type="button" class="btn btn-xs btn-primary" onclick="viewMessage('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                </button>
+				    
+                <button type="button" class="btn btn-xs btn-primary" onclick="addTeam('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-user"></span>
+                </button>
+            
+                <button type="button" class="btn btn-xs btn-primary" onclick="editItem('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+	          
+                <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-open-file"></span>
+                </button>
+        </div>
+    </div>
+</div>
+    
+								</li>';
 					          					
 					          					}
 					
@@ -449,9 +575,46 @@ foreach($projects as $p) {
 					          					->where(['itemID' => $pl["itemID"]])
 					          					->one();
 					          					
-					          					echo '<li class="ui-state-default cardItem" id="'.$pl["itemID"].'">
-														'.$planItems["content"].'
-													</li>';
+					          					echo '<li id="'.$pl["itemID"].'">
+  			    
+<div class="panel panel-default">
+    <div class="panel-heading">
+        '.$planItems["title"].'
+        <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$pl["itemID"].')">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </div>
+		    
+    <div class="panel-body" style="background-color:'.$pl["urgency"].';">
+        '.$planItems["content"].'
+    </div>
+            
+    <div class="panel-footer">
+       <div class="btn-group" role="group" aria-label="options">
+                <button type="button" class="btn btn-xs btn-primary" onclick="addMessage('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-comment"></span>
+                </button>
+            
+                <button type="button" class="btn btn-xs btn-primary" onclick="viewMessage('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                </button>
+      
+                <button type="button" class="btn btn-xs btn-primary" onclick="addTeam('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-user"></span>
+                </button>
+            
+                <button type="button" class="btn btn-xs btn-primary" onclick="editItem('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+    		    
+                <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-open-file"></span>
+                </button>
+        </div>
+    </div>
+</div>
+      			    
+								</li>';
 					          					
 					          					}
 					
@@ -481,9 +644,46 @@ foreach($projects as $p) {
 					          					->where(['itemID' => $pl["itemID"]])
 					          					->one();
 					          					
-					          					echo '<li class="ui-state-default cardItem" id="'.$pl["itemID"].'">
-														'.$planItems["content"].'
-													</li>';
+					          					echo '<li id="'.$pl["itemID"].'">
+    
+<div class="panel panel-default">
+    <div class="panel-heading">
+        '.$planItems["title"].'
+        <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$pl["itemID"].')">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </div>
+    			    
+    <div class="panel-body" style="background-color:'.$pl["urgency"].';">
+        '.$planItems["content"].'
+    </div>
+							    
+    <div class="panel-footer">
+       <div class="btn-group" role="group" aria-label="options">
+                <button type="button" class="btn btn-xs btn-primary" onclick="addMessage('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-comment"></span>
+                </button>
+        
+                <button type="button" class="btn btn-xs btn-primary" onclick="viewMessage('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                </button>
+                
+                <button type="button" class="btn btn-xs btn-primary" onclick="addTeam('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-user"></span>
+                </button>
+           
+                <button type="button" class="btn btn-xs btn-primary" onclick="editItem('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                    
+                <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-open-file"></span>
+                </button>
+        </div>
+    </div>
+</div>
+                    
+								</li>';
 					          					
 					          					}
 					
@@ -623,8 +823,46 @@ foreach($projects as $p) {
 						->where(['itemID' => $d["itemID"]])
 						->one();
 						
-						echo '<li class="ui-state-default cardItem" id="'.$d["itemID"].'">
-										'.$doneItems["content"].'
+
+						echo '<li id="'.$d["itemID"].'">
+        
+<div class="panel panel-default">
+    <div class="panel-heading">
+        '.$doneItems["title"].'
+        <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$d["itemID"].')">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </div>
+        
+    <div class="panel-body" style="background-color:'.$d["urgency"].';">
+        '.$doneItems["content"].'
+    </div>
+      
+    <div class="panel-footer">
+       <div class="btn-group" role="group" aria-label="options">
+                <button type="button" class="btn btn-xs btn-primary" onclick="addMessage('.$d["itemID"].')">
+                    <span class="glyphicon glyphicon-comment"></span>
+                </button>
+	    
+                <button type="button" class="btn btn-xs btn-primary" onclick="viewMessage('.$d["itemID"].')">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                </button>
+	      
+                <button type="button" class="btn btn-xs btn-primary" onclick="addTeam('.$d["itemID"].')">
+                    <span class="glyphicon glyphicon-user"></span>
+                </button>
+		        
+                <button type="button" class="btn btn-xs btn-primary" onclick="editItem('.$d["itemID"].')">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+					    
+                <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$d["itemID"].')">
+                    <span class="glyphicon glyphicon-open-file"></span>
+                </button>
+        </div>
+    </div>
+</div>
+					    
 								</li>';
 						
 					}

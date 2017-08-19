@@ -18,6 +18,15 @@ class DefaultController extends Controller
 		return $this->render('index.php',[]);
 	}
 	
+	public function actionRemoveitem(){
+	    $myItem=$_REQUEST["itemID"];
+	    // DELETE (table name, condition)
+	    Yii::$app->db->createCommand()->delete('items', 'itemID ='.$myItem)->execute();
+	    Yii::$app->db->createCommand()->delete('itemStatus', 'itemID ='.$myItem)->execute();
+	    Yii::$app->db->createCommand()->delete('messages', 'itemID ='.$myItem)->execute();
+	    echo "item removed";
+	}
+	
 	public function actionUpdateitem(){
 		
 		$itemID=$_REQUEST["itemID"];
