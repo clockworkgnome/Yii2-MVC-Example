@@ -47,7 +47,7 @@ padding: 5px 0 15px 0;
 //this will mak ethe list for javascript sortable connection
 $mysortables="#todo, #done";
 foreach($projects as $p) {
-	$mysortables=$mysortables.", #plan".$p["projectID"].","." #develop".$p["projectID"].","." #test".$p["projectID"].","." #deploy".$p["projectID"];
+	$mysortables=$mysortables.", #Plan".$p["projectID"].","." #Develop".$p["projectID"].","." #Test".$p["projectID"].","." #Deploy".$p["projectID"];
 }
 ?>
   <script>
@@ -202,7 +202,53 @@ foreach($projects as $p) {
           }
         });
 };
-  
+
+//this is to populate and open the edit item modal 
+function editItem(itemID){
+  	$.ajax({
+        url: "<?= Url::toRoute("/konban/default/getitemdetails")?>",
+        data: {'itemID':itemID},
+        context: document.body,
+        type: "GET",
+        success: function(data) {
+        		var mydata=data.split(",");
+        		$('#editItemDial').modal('toggle');
+        		$('#edititemurgency').val(mydata[1]);
+        		$('#edititemtitle').val(mydata[2]);
+        		$('#edititemcontent').val(mydata[3]);
+        		$('#edititemid').val(itemID);
+        	
+        }
+      });
+	
+}
+// this is the code to update the item in the update modal
+function saveediteditem(){
+	
+	var myUrgency=$('#edititemurgency').val();
+	var myTitle=$('#edititemtitle').val();
+	var myContent=$('#edititemcontent').val();
+	var myItemID=$('#edititemid').val();
+	
+  	$.ajax({
+        url: "<?= Url::toRoute("/konban/default/updateedititems")?>",
+        data: {'myItemID':myItemID,
+        	'myUrgency':myUrgency,
+        	'myTitle':myTitle,
+        	'myContent':myContent,
+            },
+        context: document.body,
+        type: "GET",
+        success: function(data) {
+        		$('#editItemDial').modal('toggle');
+        		$('#title'+myItemID).html(myTitle);
+        		$('#content'+myItemID).css("background-color",myUrgency);
+        		$('#content'+myItemID).html(myContent);
+        }
+      });
+	
+}
+
   //this fuction is for the auto complete too look up team mates when creating a project
   $( function() {
 	    var availableTags = <?= $userNamesList ?>;
@@ -215,7 +261,51 @@ foreach($projects as $p) {
   </script>
 </head>
 <body>
+<!-- this is for ajax to load javascripts -->
 <div id="myScripts"></div>
+
+<!-- this is the modal to edit an item -->
+<div class="modal fade" tabindex="-1" role="dialog" id="editItemDial">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Edit Item</h4>
+      </div>
+      <div class="modal-body">
+        <!-- this begins the form -->
+
+  		<div class="form-group row">
+  			<label for="edititemurgency" class="col-sm-4 col-md-4 col-lg-4 col-form-label">urgency:</label>
+  			<div class="col-sm-8 col-md-8 col-lg-8 ">
+    			<input class="form-control" type="color" id="edititemurgency" value="#FFFFFF">
+  			</div>
+		</div>
+      	<div class="form-group row">
+  			<label for="edititemtitle" class="col-sm-4 col-md-4 col-lg-4 col-form-label">Title:</label>
+  			<div class="col-sm-8 col-md-8 col-lg-8 ">
+    			<input class="form-control" type="text" id="edititemtitle">
+  			</div>
+		</div>
+		<div class="form-group">
+    		<label for="edititemcontent">Content:</label>
+    		<textarea class="form-control" id="edititemcontent" rows="3"></textarea>
+  		</div>
+
+		<input type="hidden" id="edititemupdated" value="<?= $myDateString ?>">
+		<input type="hidden" id="edititemid" value="<?= $myDateString ?>">
+		
+		<div id="editItemErr"></div>
+			<!-- this ends the form -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="editItemSave" onclick="saveediteditem()"><span class="glyphicon glyphicon-floppy-disk"></span> Save Item</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <!-- new project Modal -->
 <div class="modal fade" id="addProjectMod" tabindex="-1" role="dialog" aria-labelledby="AddProjectlabel">
   <div class="modal-dialog" role="document">
@@ -339,14 +429,14 @@ foreach($projects as $p) {
 							echo '<li id="'.$td["itemID"].'">
 
 <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading" id="title'.$td["itemID"].'">
         '.$todoItems["title"].'
         <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$td["itemID"].')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
 
-    <div class="panel-body" style="background-color:'.$td["urgency"].';">
+    <div class="panel-body" style="background-color:'.$td["urgency"].';" id="content'.$td["itemID"].'">
         '.$todoItems["content"].'
     </div>
 
@@ -428,7 +518,7 @@ foreach($projects as $p) {
 					          				->from('itemStatus')
 					          				->where(['projectID' => $p["projectID"],'catagory'=>'Plan','status'=>'doing'])
 					          				->all();
-					          		echo '<ul id="plan'.$p["projectID"].'" class="connectedSortable MyLists">';
+					          		echo '<ul id="Plan'.$p["projectID"].'" class="connectedSortable MyLists">';
 					          				
 					          				foreach($plans as $pl){
 					          					//var_dump($pl);
@@ -441,14 +531,14 @@ foreach($projects as $p) {
 					          					echo '<li id="'.$pl["itemID"].'">
 			              
 <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading" id="title'.$pl["itemID"].'">
         '.$planItems["title"].'
         <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$pl["itemID"].')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
 							    
-    <div class="panel-body" style="background-color:'.$pl["urgency"].';">
+    <div class="panel-body" style="background-color:'.$pl["urgency"].';" id="content'.$pl["itemID"].'">
         '.$planItems["content"].'
     </div>
       
@@ -496,7 +586,7 @@ foreach($projects as $p) {
 					          				->from('itemStatus')
 					          				->where(['projectID' => $p["projectID"],'catagory'=>'Develop','status'=>'doing'])
 					          				->all();
-					          		echo '<ul id="develop'.$p["projectID"].'" class="connectedSortable MyLists">';
+					          		echo '<ul id="Develop'.$p["projectID"].'" class="connectedSortable MyLists">';
 					          				
 					          				foreach($plans as $pl){
 					          					//var_dump($pl);
@@ -509,14 +599,14 @@ foreach($projects as $p) {
 					          					echo '<li id="'.$pl["itemID"].'">
 				    
 <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading" id="title'.$pl["itemID"].'">
         '.$planItems["title"].'
         <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$pl["itemID"].')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
             
-    <div class="panel-body" style="background-color:'.$pl["urgency"].';">
+    <div class="panel-body" style="background-color:'.$pl["urgency"].';" id="content'.$pl["itemID"].'">
         '.$planItems["content"].'
     </div>
   	    
@@ -565,7 +655,7 @@ foreach($projects as $p) {
 					          				->from('itemStatus')
 					          				->where(['projectID' => $p["projectID"],'catagory'=>'Test','status'=>'doing'])
 					          				->all();
-					          		echo '<ul id="test'.$p["projectID"].'" class="connectedSortable MyLists">';
+					          		echo '<ul id="Test'.$p["projectID"].'" class="connectedSortable MyLists">';
 					          				
 					          				foreach($plans as $pl){
 					          					//var_dump($pl);
@@ -578,14 +668,14 @@ foreach($projects as $p) {
 					          					echo '<li id="'.$pl["itemID"].'">
   			    
 <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading" id="title'.$pl["itemID"].'">
         '.$planItems["title"].'
         <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$pl["itemID"].')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
 		    
-    <div class="panel-body" style="background-color:'.$pl["urgency"].';">
+    <div class="panel-body" style="background-color:'.$pl["urgency"].';" id="content'.$pl["itemID"].'">
         '.$planItems["content"].'
     </div>
             
@@ -634,7 +724,7 @@ foreach($projects as $p) {
 					          				->from('itemStatus')
 					          				->where(['projectID' => $p["projectID"],'catagory'=>'Deploy','status'=>'doing'])
 					          				->all();
-					          		echo '<ul id="deploy'.$p["projectID"].'" class="connectedSortable MyLists">';
+					          		echo '<ul id="Deploy'.$p["projectID"].'" class="connectedSortable MyLists">';
 					          				
 					          				foreach($plans as $pl){
 					          					//var_dump($pl);
@@ -647,14 +737,14 @@ foreach($projects as $p) {
 					          					echo '<li id="'.$pl["itemID"].'">
     
 <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading" id="title'.$pl["itemID"].'">
         '.$planItems["title"].'
         <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$pl["itemID"].')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
     			    
-    <div class="panel-body" style="background-color:'.$pl["urgency"].';">
+    <div class="panel-body" style="background-color:'.$pl["urgency"].';" id="content'.$pl["itemID"].'">
         '.$planItems["content"].'
     </div>
 							    
@@ -827,14 +917,14 @@ foreach($projects as $p) {
 						echo '<li id="'.$d["itemID"].'">
         
 <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading" id="title'.$d["itemID"].'">
         '.$doneItems["title"].'
         <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$d["itemID"].')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
         
-    <div class="panel-body" style="background-color:'.$d["urgency"].';">
+    <div class="panel-body" style="background-color:'.$d["urgency"].';" id="content'.$d["itemID"].'">
         '.$doneItems["content"].'
     </div>
       

@@ -18,6 +18,21 @@ class DefaultController extends Controller
 		return $this->render('index.php',[]);
 	}
 	
+	public function actionUpdateedititems(){
+	    $myItem=$_REQUEST["myItemID"];
+	    $myTitle=$_REQUEST["myTitle"];
+	    $myContent=$_REQUEST["myContent"];
+	    $myUrgency=$_REQUEST["myUrgency"];
+	    Yii::$app->db->createCommand()->update('itemStatus', [
+	        'urgency' => $myUrgency,
+	    ], "itemID=$myItem")->execute();
+	    Yii::$app->db->createCommand()->update('items', [
+	        'title' => $myTitle,
+	        'content' => $myContent,
+	    ], "itemID=$myItem")->execute();
+	    
+	}
+	
 	public function actionRemoveitem(){
 	    $myItem=$_REQUEST["itemID"];
 	    // DELETE (table name, condition)
@@ -25,6 +40,24 @@ class DefaultController extends Controller
 	    Yii::$app->db->createCommand()->delete('itemStatus', 'itemID ='.$myItem)->execute();
 	    Yii::$app->db->createCommand()->delete('messages', 'itemID ='.$myItem)->execute();
 	    echo "item removed";
+	}
+	
+	public function actionGetitemdetails(){
+	    $itemID=$_REQUEST["itemID"];
+	    $myItem = (new \yii\db\Query())
+	    ->select(['*'])
+	    ->from('items')
+	    ->where(['itemID' => $itemID])
+	    ->one();
+	    
+	    $myStatus = (new \yii\db\Query())
+	    ->select(['*'])
+	    ->from('itemStatus')
+	    ->where(['itemID' => $itemID])
+	    ->one();
+	    
+	    echo $myStatus["catagory"].",".$myStatus["urgency"].",".$myItem["title"].",".$myItem["content"];
+	    
 	}
 	
 	public function actionUpdateitem(){
