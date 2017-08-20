@@ -448,7 +448,9 @@ function removeProject(pID){
 							->from('items')
 							->where(['itemID' => $td["itemID"]])
 							->one();
-								
+							$myAbstract=$todoItems["content"];
+							$myAbstract=substr($myAbstract,0,50);
+							
 							echo '<li id="'.$td["itemID"].'">
 
 <div class="panel panel-default">
@@ -460,7 +462,7 @@ function removeProject(pID){
     </div>
 
     <div class="panel-body" style="background-color:'.$td["urgency"].';" id="content'.$td["itemID"].'">
-        '.$todoItems["content"].'
+        '.$myAbstract.'
     </div>
 
     <div class="panel-footer">
@@ -553,7 +555,8 @@ function removeProject(pID){
 					          					->from('items')
 					          					->where(['itemID' => $pl["itemID"]])
 					          					->one();
-					          					
+					          					$myAbstract=$planItems["content"];
+					          					$myAbstract=substr($myAbstract,0,50);
 					          					echo '<li id="'.$pl["itemID"].'">
 			              
 <div class="panel panel-default">
@@ -565,7 +568,7 @@ function removeProject(pID){
     </div>
 							    
     <div class="panel-body" style="background-color:'.$pl["urgency"].';" id="content'.$pl["itemID"].'">
-        '.$planItems["content"].'
+        '.$myAbstract.'
     </div>
       
     <div class="panel-footer">
@@ -621,7 +624,8 @@ function removeProject(pID){
 					          					->from('items')
 					          					->where(['itemID' => $pl["itemID"]])
 					          					->one();
-					          					
+					          					$myAbstract=$planItems["content"];
+					          					$myAbstract=substr($myAbstract,0,50);
 					          					echo '<li id="'.$pl["itemID"].'">
 				    
 <div class="panel panel-default">
@@ -633,7 +637,7 @@ function removeProject(pID){
     </div>
             
     <div class="panel-body" style="background-color:'.$pl["urgency"].';" id="content'.$pl["itemID"].'">
-        '.$planItems["content"].'
+        '.$myAbstract.'
     </div>
   	    
     <div class="panel-footer">
@@ -690,7 +694,8 @@ function removeProject(pID){
 					          					->from('items')
 					          					->where(['itemID' => $pl["itemID"]])
 					          					->one();
-					          					
+					          					$myAbstract=$planItems["content"];
+					          					$myAbstract=substr($myAbstract,0,50);
 					          					echo '<li id="'.$pl["itemID"].'">
   			    
 <div class="panel panel-default">
@@ -702,7 +707,7 @@ function removeProject(pID){
     </div>
 		    
     <div class="panel-body" style="background-color:'.$pl["urgency"].';" id="content'.$pl["itemID"].'">
-        '.$planItems["content"].'
+        '.$myAbstract.'
     </div>
             
     <div class="panel-footer">
@@ -759,7 +764,8 @@ function removeProject(pID){
 					          					->from('items')
 					          					->where(['itemID' => $pl["itemID"]])
 					          					->one();
-					          					
+					          					$myAbstract=$planItems["content"];
+					          					$myAbstract=substr($myAbstract,0,50);
 					          					echo '<li id="'.$pl["itemID"].'">
     
 <div class="panel panel-default">
@@ -771,7 +777,7 @@ function removeProject(pID){
     </div>
     			    
     <div class="panel-body" style="background-color:'.$pl["urgency"].';" id="content'.$pl["itemID"].'">
-        '.$planItems["content"].'
+        '.$myAbstract.'
     </div>
 							    
     <div class="panel-footer">
@@ -938,7 +944,8 @@ function removeProject(pID){
 						->from('items')
 						->where(['itemID' => $d["itemID"]])
 						->one();
-						
+						$myAbstract=$doneItems["content"];
+						$myAbstract=substr($myAbstract,0,50);
 
 						echo '<li id="'.$d["itemID"].'">
         
@@ -951,7 +958,7 @@ function removeProject(pID){
     </div>
         
     <div class="panel-body" style="background-color:'.$d["urgency"].';" id="content'.$d["itemID"].'">
-        '.$doneItems["content"].'
+        '.$myAbstract.'
     </div>
       
     <div class="panel-footer">

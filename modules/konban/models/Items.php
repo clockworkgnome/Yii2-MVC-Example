@@ -38,7 +38,7 @@ class Items extends \yii\db\ActiveRecord
             [['ownerID', 'title', 'created', 'updated'], 'required'],
             [['ownerID'], 'integer'],
             [['created', 'updated'], 'safe'],
-            [['title', 'content'], 'string', 'max' => 100],
+            [['title'], 'string', 'max' => 100],
             [['ownerID'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['ownerID' => 'id']],
         ];
     }

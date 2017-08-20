@@ -193,12 +193,50 @@ class DefaultController extends Controller
 			$myStatus->urgency=$_REQUEST["doingitemurgency"];
 			if($myStatus->validate()){
 				$myStatus->save();
-				echo 'saved,'.strtolower($myStatus->catagory).$myStatus->projectID.',
-				<li class="ui-state-default cardItem" id="'.$myStatus->itemID.'">
-					'.$myItem->content.'
-				</li>
+				$myAbstract=$myItem->content;
+				$myAbstract=substr($myAbstract,0,50);
+				echo 'saved,'.$myStatus->catagory.$myStatus->projectID.',
+<li id="'.$myStatus->itemID.'">
 
-';
+<div class="panel panel-default">
+    <div class="panel-heading" id="title'.$myStatus->itemID.'">
+        '.$myItem->title.'
+        <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$myStatus->itemID.')">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </div>
+
+    <div class="panel-body" style="background-color:'.$myStatus->urgency.';" id="content'.$myStatus->itemID.'">
+        '.$myAbstract.'
+    </div>
+
+    <div class="panel-footer">
+       <div class="btn-group" role="group" aria-label="options">
+                <button type="button" class="btn btn-xs btn-primary" onclick="addMessage('.$myStatus->itemID.')">
+                    <span class="glyphicon glyphicon-comment"></span>
+                </button>
+
+                <button type="button" class="btn btn-xs btn-primary" onclick="viewMessage('.$myStatus->itemID.')">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                </button>
+
+                <button type="button" class="btn btn-xs btn-primary" onclick="addTeam('.$myStatus->itemID.')">
+                    <span class="glyphicon glyphicon-user"></span>
+                </button>
+
+                <button type="button" class="btn btn-xs btn-primary" onclick="editItem('.$myStatus->itemID.')">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+
+                <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$myStatus->itemID.')">
+                    <span class="glyphicon glyphicon-fullscreen"></span>
+                </button>
+        </div>
+    </div>
+</div>
+										
+								</li>';
+
 			}else{
 				$errors = $myStatus->errors;
 				foreach ($errors as $key=>$value){
