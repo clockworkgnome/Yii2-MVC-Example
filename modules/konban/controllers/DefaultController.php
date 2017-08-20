@@ -18,6 +18,79 @@ class DefaultController extends Controller
 		return $this->render('index.php',[]);
 	}
 	
+	public function actionRemoveproject(){
+	    $myPID=$_REQUEST["pID"];
+	    
+	    Yii::$app->db->createCommand()->delete('projects', 'projectID ='.$myPID)->execute();
+	    
+	    Yii::$app->db->createCommand()->update('itemStatus', [
+	        'projectID' => "-1",
+	        'status' => "todo",
+	        'catagory' => "",
+	    ], "projectID=$myPID")->execute();
+	    
+	    Yii::$app->db->createCommand()->update('messages', [
+	        'projectID' => "-1",
+	    ], "projectID=$myPID")->execute();
+	    
+	    $mytodo=(new \yii\db\Query())
+	    ->select(['*'])
+	    ->from('itemStatus')
+	    ->where(['status'=>'todo'])
+	    ->all();
+	    
+	    foreach ($mytodo as $td){
+	        
+	        $todoItems = (new \yii\db\Query())
+	        ->select(['*'])
+	        ->from('items')
+	        ->where(['itemID' => $td["itemID"]])
+	        ->one();
+	        
+	        echo '<li id="'.$td["itemID"].'">
+	            
+<div class="panel panel-default">
+    <div class="panel-heading" id="title'.$td["itemID"].'">
+        '.$todoItems["title"].'
+        <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$td["itemID"].')">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </div>
+            
+    <div class="panel-body" style="background-color:'.$td["urgency"].';" id="content'.$td["itemID"].'">
+        '.$todoItems["content"].'
+    </div>
+            
+    <div class="panel-footer">
+       <div class="btn-group" role="group" aria-label="options">
+                <button type="button" class="btn btn-xs btn-primary" onclick="addMessage('.$td["itemID"].')">
+                    <span class="glyphicon glyphicon-comment"></span>
+                </button>
+                    
+                <button type="button" class="btn btn-xs btn-primary" onclick="viewMessage('.$td["itemID"].')">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                </button>
+                    
+                <button type="button" class="btn btn-xs btn-primary" onclick="addTeam('.$td["itemID"].')">
+                    <span class="glyphicon glyphicon-user"></span>
+                </button>
+                    
+                <button type="button" class="btn btn-xs btn-primary" onclick="editItem('.$td["itemID"].')">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                    
+                <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$td["itemID"].')">
+                    <span class="glyphicon glyphicon-fullscreen"></span>
+                </button>
+        </div>
+    </div>
+</div>
+                    
+								</li>';
+	        
+	    }
+	}
+	
 	public function actionUpdateedititems(){
 	    $myItem=$_REQUEST["myItemID"];
 	    $myTitle=$_REQUEST["myTitle"];

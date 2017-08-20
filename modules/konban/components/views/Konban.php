@@ -240,12 +240,35 @@ function saveediteditem(){
         context: document.body,
         type: "GET",
         success: function(data) {
+            var myhead ='<button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('+myItemID+')"><span class="glyphicon glyphicon-remove"></span></button>';
         		$('#editItemDial').modal('toggle');
-        		$('#title'+myItemID).html(myTitle);
+        		$('#title'+myItemID).html(myTitle+myhead);
         		$('#content'+myItemID).css("background-color",myUrgency);
         		$('#content'+myItemID).html(myContent);
         }
       });
+	
+}
+
+//this is the code for the remove project button
+function removeProject(pID){
+	  if(confirm("Are you sure you want to permanently delete this project?")){
+    	  $.ajax({
+              url: "<?= Url::toRoute("/konban/default/removeproject")?>",
+              data: {
+              'pID':pID,
+              },
+              context: document.body,
+              type: "GET",
+              success: function(data) {
+    				//do stuff with data
+            	  		$("#project"+pID).remove();
+            	  		$("#todo").empty();
+            	  		$("#todo").html(data);
+    
+              }
+            });
+  }
 	
 }
 
@@ -459,7 +482,7 @@ function saveediteditem(){
                 </button>
 
                 <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$td["itemID"].')">
-                    <span class="glyphicon glyphicon-open-file"></span>
+                    <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
     </div>
@@ -492,14 +515,17 @@ function saveediteditem(){
           				//var_dump($p);
           				
           				echo'
-					<li>
+					<li id="project'.$p["projectID"].'">
         				<div class="panel panel-default">
                   			<div class="panel-heading">
                     			<span class="panel-title">
                     				<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
                     				'.$p["name"].'
                     			</span>
-								<button type="button" onclick="changeProjectID('.$p["projectID"].');" class="btn btn-default pull-right" data-toggle="modal" data-target="#adddoingitem">
+                            <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeProject('.$p["projectID"].')">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+							<button type="button" onclick="changeProjectID('.$p["projectID"].');" class="btn btn-xs pull-right" data-toggle="modal" data-target="#adddoingitem">
       								<span class="glyphicon glyphicon-list-alt"></span> Add Item
     							</button>
                   			</div>
@@ -561,7 +587,7 @@ function saveediteditem(){
                 </button>
                       
                 <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$pl["itemID"].')">
-                    <span class="glyphicon glyphicon-open-file"></span>
+                    <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
     </div>
@@ -629,7 +655,7 @@ function saveediteditem(){
                 </button>
 	          
                 <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$pl["itemID"].')">
-                    <span class="glyphicon glyphicon-open-file"></span>
+                    <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
     </div>
@@ -698,7 +724,7 @@ function saveediteditem(){
                 </button>
     		    
                 <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$pl["itemID"].')">
-                    <span class="glyphicon glyphicon-open-file"></span>
+                   <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
     </div>
@@ -767,7 +793,7 @@ function saveediteditem(){
                 </button>
                     
                 <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$pl["itemID"].')">
-                    <span class="glyphicon glyphicon-open-file"></span>
+                    <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
     </div>
@@ -947,7 +973,7 @@ function saveediteditem(){
                 </button>
 					    
                 <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$d["itemID"].')">
-                    <span class="glyphicon glyphicon-open-file"></span>
+                    <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
     </div>
