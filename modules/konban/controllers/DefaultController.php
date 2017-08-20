@@ -201,7 +201,7 @@ class DefaultController extends Controller
 <div class="panel panel-default">
     <div class="panel-heading" id="title'.$myStatus->itemID.'">
         '.$myItem->title.'
-        <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$myStatus->itemID.')">
+        <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeitem('.$myStatus->itemID.')" onclick="removeitem('.$myStatus->itemID.')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
@@ -212,23 +212,23 @@ class DefaultController extends Controller
 
     <div class="panel-footer">
        <div class="btn-group" role="group" aria-label="options">
-                <button type="button" class="btn btn-xs btn-primary" onclick="addMessage('.$myStatus->itemID.')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage('.$myStatus->itemID.')" onclick="addMessage('.$myStatus->itemID.')">
                     <span class="glyphicon glyphicon-comment"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" onclick="viewMessage('.$myStatus->itemID.')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage('.$myStatus->itemID.')" onclick="viewMessage('.$myStatus->itemID.')">
                     <span class="glyphicon glyphicon-envelope"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" onclick="addTeam('.$myStatus->itemID.')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addTeam('.$myStatus->itemID.')" onclick="addTeam('.$myStatus->itemID.')">
                     <span class="glyphicon glyphicon-user"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" onclick="editItem('.$myStatus->itemID.')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem('.$myStatus->itemID.')" onclick="editItem('.$myStatus->itemID.')">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$myStatus->itemID.')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem('.$myStatus->itemID.')" onclick="viewItem('.$myStatus->itemID.')">
                     <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>

@@ -495,7 +495,7 @@ function viewItem(itemID){
 <div class="panel panel-default">
     <div class="panel-heading" id="title'.$td["itemID"].'">
         '.$todoItems["title"].'
-        <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$td["itemID"].')">
+        <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeitem('.$td["itemID"].')" onclick="removeitem('.$td["itemID"].')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
@@ -563,7 +563,7 @@ function viewItem(itemID){
                     				<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
                     				'.$p["name"].'
                     			</span>
-                            <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeProject('.$p["projectID"].')">
+                            <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeProject('.$p["projectID"].')" onclick="removeProject('.$p["projectID"].')">
                                 <span class="glyphicon glyphicon-remove"></span>
                             </button>
 							<button type="button" onclick="changeProjectID('.$p["projectID"].');" class="btn btn-xs pull-right" data-toggle="modal" data-target="#adddoingitem">
@@ -601,7 +601,7 @@ function viewItem(itemID){
 <div class="panel panel-default">
     <div class="panel-heading" id="title'.$pl["itemID"].'">
         '.$planItems["title"].'
-        <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$pl["itemID"].')">
+        <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeitem('.$pl["itemID"].')" onclick="removeitem('.$pl["itemID"].')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
@@ -612,23 +612,23 @@ function viewItem(itemID){
       
     <div class="panel-footer">
        <div class="btn-group" role="group" aria-label="options">
-                <button type="button" class="btn btn-xs btn-primary" onclick="addMessage('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage('.$pl["itemID"].')" onclick="addMessage('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-comment"></span>
                 </button>
-      
-                <button type="button" class="btn btn-xs btn-primary" onclick="viewMessage('.$pl["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage('.$pl["itemID"].')" onclick="viewMessage('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-envelope"></span>
                 </button>
-      
-                <button type="button" class="btn btn-xs btn-primary" onclick="addTeam('.$pl["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addTeam('.$pl["itemID"].')" onclick="addTeam('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-user"></span>
                 </button>
-	      
-                <button type="button" class="btn btn-xs btn-primary" onclick="editItem('.$pl["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem('.$pl["itemID"].')" onclick="editItem('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
-                      
-                <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$pl["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem('.$pl["itemID"].')" onclick="viewItem('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
@@ -670,7 +670,7 @@ function viewItem(itemID){
 <div class="panel panel-default">
     <div class="panel-heading" id="title'.$pl["itemID"].'">
         '.$planItems["title"].'
-        <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$pl["itemID"].')">
+        <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeitem('.$pl["itemID"].')" onclick="removeitem('.$pl["itemID"].')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
@@ -681,23 +681,23 @@ function viewItem(itemID){
   	    
     <div class="panel-footer">
        <div class="btn-group" role="group" aria-label="options">
-                <button type="button" class="btn btn-xs btn-primary" onclick="addMessage('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage('.$pl["itemID"].')" onclick="addMessage('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-comment"></span>
                 </button>
-              
-                <button type="button" class="btn btn-xs btn-primary" onclick="viewMessage('.$pl["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage('.$pl["itemID"].')" onclick="viewMessage('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-envelope"></span>
                 </button>
-				    
-                <button type="button" class="btn btn-xs btn-primary" onclick="addTeam('.$pl["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addTeam('.$pl["itemID"].')" onclick="addTeam('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-user"></span>
                 </button>
-            
-                <button type="button" class="btn btn-xs btn-primary" onclick="editItem('.$pl["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem('.$pl["itemID"].')" onclick="editItem('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
-	          
-                <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$pl["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem('.$pl["itemID"].')" onclick="viewItem('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
@@ -740,7 +740,7 @@ function viewItem(itemID){
 <div class="panel panel-default">
     <div class="panel-heading" id="title'.$pl["itemID"].'">
         '.$planItems["title"].'
-        <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$pl["itemID"].')">
+        <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeitem('.$pl["itemID"].')" onclick="removeitem('.$pl["itemID"].')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
@@ -751,24 +751,24 @@ function viewItem(itemID){
             
     <div class="panel-footer">
        <div class="btn-group" role="group" aria-label="options">
-                <button type="button" class="btn btn-xs btn-primary" onclick="addMessage('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage('.$pl["itemID"].')" onclick="addMessage('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-comment"></span>
                 </button>
-            
-                <button type="button" class="btn btn-xs btn-primary" onclick="viewMessage('.$pl["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage('.$pl["itemID"].')" onclick="viewMessage('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-envelope"></span>
                 </button>
-      
-                <button type="button" class="btn btn-xs btn-primary" onclick="addTeam('.$pl["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addTeam('.$pl["itemID"].')" onclick="addTeam('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-user"></span>
                 </button>
-            
-                <button type="button" class="btn btn-xs btn-primary" onclick="editItem('.$pl["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem('.$pl["itemID"].')" onclick="editItem('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
-    		    
-                <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$pl["itemID"].')">
-                   <span class="glyphicon glyphicon-fullscreen"></span>
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem('.$pl["itemID"].')" onclick="viewItem('.$pl["itemID"].')">
+                    <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
     </div>
@@ -810,7 +810,7 @@ function viewItem(itemID){
 <div class="panel panel-default">
     <div class="panel-heading" id="title'.$pl["itemID"].'">
         '.$planItems["title"].'
-        <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$pl["itemID"].')">
+        <button type="button" class="btn btn-xs btn-danger  pull-right"  ontouchstart="removeitem('.$pl["itemID"].')"  onclick="removeitem('.$pl["itemID"].')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
@@ -821,23 +821,23 @@ function viewItem(itemID){
 							    
     <div class="panel-footer">
        <div class="btn-group" role="group" aria-label="options">
-                <button type="button" class="btn btn-xs btn-primary" onclick="addMessage('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage('.$pl["itemID"].')" onclick="addMessage('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-comment"></span>
                 </button>
-        
-                <button type="button" class="btn btn-xs btn-primary" onclick="viewMessage('.$pl["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage('.$pl["itemID"].')" onclick="viewMessage('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-envelope"></span>
                 </button>
-                
-                <button type="button" class="btn btn-xs btn-primary" onclick="addTeam('.$pl["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addTeam('.$pl["itemID"].')" onclick="addTeam('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-user"></span>
                 </button>
-           
-                <button type="button" class="btn btn-xs btn-primary" onclick="editItem('.$pl["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem('.$pl["itemID"].')" onclick="editItem('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
-                    
-                <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$pl["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem('.$pl["itemID"].')" onclick="viewItem('.$pl["itemID"].')">
                     <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
@@ -991,7 +991,7 @@ function viewItem(itemID){
 <div class="panel panel-default">
     <div class="panel-heading" id="title'.$d["itemID"].'">
         '.$doneItems["title"].'
-        <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeitem('.$d["itemID"].')">
+        <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeitem('.$d["itemID"].')" onclick="removeitem('.$d["itemID"].')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
@@ -1002,23 +1002,23 @@ function viewItem(itemID){
       
     <div class="panel-footer">
        <div class="btn-group" role="group" aria-label="options">
-                <button type="button" class="btn btn-xs btn-primary" onclick="addMessage('.$d["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage('.$d["itemID"].')" onclick="addMessage('.$d["itemID"].')">
                     <span class="glyphicon glyphicon-comment"></span>
                 </button>
-	    
-                <button type="button" class="btn btn-xs btn-primary" onclick="viewMessage('.$d["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage('.$d["itemID"].')" onclick="viewMessage('.$d["itemID"].')">
                     <span class="glyphicon glyphicon-envelope"></span>
                 </button>
-	      
-                <button type="button" class="btn btn-xs btn-primary" onclick="addTeam('.$d["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addTeam('.$d["itemID"].')" onclick="addTeam('.$d["itemID"].')">
                     <span class="glyphicon glyphicon-user"></span>
                 </button>
-		        
-                <button type="button" class="btn btn-xs btn-primary" onclick="editItem('.$d["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem('.$d["itemID"].')" onclick="editItem('.$d["itemID"].')">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
-					    
-                <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$d["itemID"].')">
+
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem('.$d["itemID"].')" onclick="viewItem('.$d["itemID"].')">
                     <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
