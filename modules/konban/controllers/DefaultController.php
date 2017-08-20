@@ -5,6 +5,7 @@ use app\modules\konban\models\Items;
 use app\modules\konban\models\ItemsStatus;
 use yii;
 use yii\web\Controller;
+use yii\helpers\Url;
 
 class DefaultController extends Controller
 {
@@ -235,14 +236,17 @@ class DefaultController extends Controller
 		if($model->validate()){
 			$model->save();
 			echo 'saved
-					<li>
+					<li id="project'.$model->getPrimaryKey().'">
         				<div class="panel panel-default">
                   			<div class="panel-heading">
                     			<span class="panel-title">
                     				<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
                     				'.$model->name.'
                     			</span>
-								<button type="button" onclick="changeProjectID('.$model->getPrimaryKey().');" class="btn btn-default pull-right" data-toggle="modal" data-target="#adddoingitem">
+                            <button type="button" class="btn btn-xs btn-danger  pull-right" onclick="removeProject('.$model->getPrimaryKey().')">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+							<button type="button" onclick="changeProjectID('.$model->getPrimaryKey().');" class="btn btn-xs pull-right" data-toggle="modal" data-target="#adddoingitem">
       								<span class="glyphicon glyphicon-list-alt"></span> Add Item
     							</button>
                   			</div>
@@ -256,8 +260,8 @@ class DefaultController extends Controller
         								<div class="panel panel-default">
                                           <div class="panel-heading">Plan</div>
                                           <div class="panel-body">
-					          				<ul id="plan'.$model->getPrimaryKey().'" class="connectedSortable MyLists">
-											</ul>
+					          			  <ul id="Plan'.$model->getPrimaryKey().'" class="connectedSortable MyLists">
+                                           </ul>
 										</div>
                                         </div>
                                     </div>
@@ -267,8 +271,9 @@ class DefaultController extends Controller
         								<div class="panel panel-default">
                                           <div class="panel-heading">Develop</div>
                                           <div class="panel-body">
-											<ul id="develop'.$model->getPrimaryKey().'" class="connectedSortable MyLists">
-											</ul>
+                                           <ul id="Develop'.$model->getPrimaryKey().'" class="connectedSortable MyLists">
+                                           </ul>
+
                                           </div>
                                         </div>
                                     </div>
@@ -278,8 +283,9 @@ class DefaultController extends Controller
         								<div class="panel panel-default">
                                           <div class="panel-heading">Test</div>
                                           <div class="panel-body">
-											<ul id="test'.$model->getPrimaryKey().'" class="connectedSortable MyLists">
-											</ul>
+                                           <ul id="Test'.$model->getPrimaryKey().'" class="connectedSortable MyLists">
+                                           </ul>
+
                                           </div>
                                         </div>
                                     </div>
@@ -289,8 +295,9 @@ class DefaultController extends Controller
         								<div class="panel panel-default">
                                           <div class="panel-heading">Deploy</div>
                                           <div class="panel-body">
-											<ul id="deploy'.$model->getPrimaryKey().'" class="connectedSortable MyLists">
-											</ul>
+					          			   <ul id="Deploy'.$model->getPrimaryKey().'" class="connectedSortable MyLists">
+                                            </ul>
+
                                           </div>
                                         </div>
                                     </div>
@@ -307,18 +314,44 @@ class DefaultController extends Controller
                 		</div>
             		</li>
             		<!-- end project pannel -->
+
 <script>
 $( function() {
 
-		    $( "#plan'.$model->getPrimaryKey().',#develop'.$model->getPrimaryKey().',#test'.$model->getPrimaryKey().',#deploy'.$model->getPrimaryKey().'" ).sortable({
+		    $( "#Plan'.$model->getPrimaryKey().',#Develop'.$model->getPrimaryKey().',#Test'.$model->getPrimaryKey().',#Deploy'.$model->getPrimaryKey().'" ).sortable({
+    		    connectWith: ".connectedSortable",
     		    connectWith: ".connectedSortable",
     		    receive: function( event, ui ) {
-					console.log(event);
-					alert(event.target.id);
-					console.log(ui);
-        		    }
-		    }).disableSelection();
-		  } );
+					//console.log(event);
+					//console.log(ui);
+					//console.log("catagoryProjectNumber="+event.target.id);
+					//console.log("itemID="+ui.item[0].id);
+					var composit=event.target.id;
+					var itemID=ui.item[0].id;
+					var projectID = composit.replace( /^\D+/g, "");
+					var catagory= composit.replace(/[0-9]/g, "");
+					console.log("itemID"+itemID);
+					console.log("projectID"+projectID);
+					console.log("catagory"+catagory);
+					
+					$.ajax({
+			          url: "'.Url::toRoute("/konban/default/updateitem").'",
+			          data: {
+			          "itemID":itemID,
+			          "projectID":projectID,
+			          "catagory":catagory,
+			          },
+			          context: document.body,
+			          type: "GET",
+			          success: function(data) {
+							//do stuff with data
+							console.log(data);
+			          }
+			        });
+								
+			        		    }
+					    }).disableSelection();
+					  } );
 </script>
 
 
