@@ -506,23 +506,23 @@ function viewItem(itemID){
 
     <div class="panel-footer">
        <div class="btn-group" role="group" aria-label="options">
-                <button type="button" class="btn btn-xs btn-primary" onclick="addMessage('.$td["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage('.$td["itemID"].')" onclick="addMessage('.$td["itemID"].')">
                     <span class="glyphicon glyphicon-comment"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" onclick="viewMessage('.$td["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage('.$td["itemID"].')" onclick="viewMessage('.$td["itemID"].')">
                     <span class="glyphicon glyphicon-envelope"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" onclick="addTeam('.$td["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addTeam('.$td["itemID"].')" onclick="addTeam('.$td["itemID"].')">
                     <span class="glyphicon glyphicon-user"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" onclick="editItem('.$td["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem('.$td["itemID"].')" onclick="editItem('.$td["itemID"].')">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" onclick="viewItem('.$td["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem('.$td["itemID"].')" onclick="viewItem('.$td["itemID"].')">
                     <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
