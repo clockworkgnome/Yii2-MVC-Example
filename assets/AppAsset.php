@@ -23,7 +23,8 @@ class AppAsset extends AssetBundle
 	];
 	public $js = [
 			'js/jqueryui/external/jquery/jquery.js',
-			'js/jqueryui/jquery-ui.min.js'
+			'js/jqueryui/jquery-ui.min.js',
+	        'js/jquery.ui.touch-punch.min.js'
 	];
 	public $depends = [
 			'yii\web\YiiAsset',
