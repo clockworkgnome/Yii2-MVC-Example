@@ -163,7 +163,7 @@ foreach($projects as $p) {
           type: "GET",
           success: function(data) {
 				//do stuff with data
-				var mydata=data.split(",");
+				var mydata=data.split("---");
 				if(mydata[0]==="saved"){
 					$('#adddoingitem').modal('toggle');
 					console.log('#'+mydata[1]);
@@ -211,7 +211,7 @@ function editItem(itemID){
         context: document.body,
         type: "GET",
         success: function(data) {
-        		var mydata=data.split(",");
+        		var mydata=data.split("---");
         		$('#editItemDial').modal('toggle');
         		$('#edititemurgency').val(mydata[1]);
         		$('#edititemtitle').val(mydata[2]);

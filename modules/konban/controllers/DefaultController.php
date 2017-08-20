@@ -130,7 +130,7 @@ class DefaultController extends Controller
 	    ->where(['itemID' => $itemID])
 	    ->one();
 	    
-	    echo $myStatus["catagory"].",".$myStatus["urgency"].",".$myItem["title"].",".$myItem["content"];
+	    echo $myStatus["catagory"]."---".$myStatus["urgency"]."---".$myItem["title"]."---".$myItem["content"];
 	    
 	}
 	
@@ -195,7 +195,7 @@ class DefaultController extends Controller
 				$myStatus->save();
 				$myAbstract=$myItem->content;
 				$myAbstract=substr($myAbstract,0,50);
-				echo 'saved,'.$myStatus->catagory.$myStatus->projectID.',
+				echo 'saved---'.$myStatus->catagory.$myStatus->projectID.'---
 <li id="'.$myStatus->itemID.'">
 
 <div class="panel panel-default">
