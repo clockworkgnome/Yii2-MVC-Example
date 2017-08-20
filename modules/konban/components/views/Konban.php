@@ -1,56 +1,60 @@
-<?php 
-//NOTES:
-//The only element ID on this page with out a prefix should be an item!
-// only item elements have pure integers for ID's 
+<?php
+// NOTES:
+// The only element ID on this page with out a prefix should be an item!
+// only item elements have pure integers for ID's
 use yii\helpers\Url;
-$myDate= new dateTime();
+$myDate = new dateTime();
 $myDateString = $myDate->format('Y-m-d H:i');
 ?>
-  <style>
-  .padding-0{
-    padding-right:0;
-    padding-left:0;
+<style>
+.padding-0 {
+	padding-right: 0;
+	padding-left: 0;
 }
-.nopadds{
-padding: 5px 0 15px 0;
-}
-.MyLists{
-    border: 1px solid #eee;
-    width: 100%;
-    min-height: 20px;
-    list-style-type: none;
-    margin: 0;
-    padding: 5px 0 0 0;
-    float: left;
-    margin-right: 10px;
-  }
- .cardItem {
-    margin: 0 5px 5px 5px;
-    padding: 5px;
-    font-size: 1.2em;
-    width: 120px;
-  }
-  #pannelSort{
-   list-style-type: none;
-   margin: 0 0 0 0;
-   padding: 5px;
-  }
-.ui-autocomplete {
-  position: fixed;
-  top: 100%;
-  left: 0;
-  z-index: 1051 !important;
 
+.nopadds {
+	padding: 5px 0 15px 0;
 }
-  </style>
-<?php 
-//this will mak ethe list for javascript sortable connection
-$mysortables="#todo, #done";
-foreach($projects as $p) {
-	$mysortables=$mysortables.", #Plan".$p["projectID"].","." #Develop".$p["projectID"].","." #Test".$p["projectID"].","." #Deploy".$p["projectID"];
+
+.MyLists {
+	border: 1px solid #eee;
+	width: 100%;
+	min-height: 20px;
+	list-style-type: none;
+	margin: 0;
+	padding: 5px 0 0 0;
+	float: left;
+	margin-right: 10px;
+}
+
+.cardItem {
+	margin: 0 5px 5px 5px;
+	padding: 5px;
+	font-size: 1.2em;
+	width: 120px;
+}
+
+#pannelSort {
+	list-style-type: none;
+	margin: 0 0 0 0;
+	padding: 5px;
+}
+
+.ui-autocomplete {
+	position: fixed;
+	top: 100%;
+	left: 0;
+	z-index: 1051 !important;
+}
+</style>
+<?php
+// this will mak ethe list for javascript sortable connection
+$mysortables = "#todo, #done";
+foreach ($projects as $p) {
+    $mysortables = $mysortables . ", #Plan" . $p["projectID"] . "," . " #Develop" . $p["projectID"] . "," . " #Test" . $p["projectID"] . "," . " #Deploy" . $p["projectID"];
 }
 ?>
-  <script>
+<script>
   //this timer give the page time to load JUI.js
   setTimeout(function(){
 	  //this function connects all the sortable lists on the page
@@ -292,6 +296,24 @@ function viewItem(itemID){
 	
 }
 
+// this is the code to view the user of the posted item 
+function addTeam(itemID){
+	$.ajax({
+        url: "<?= Url::toRoute("/konban/default/getuserbyitemid")?>",
+        data: {'itemID':itemID},
+        context: document.body,
+        type: "GET",
+        success: function(data) {        		
+        	$("#myteambutton"+itemID).attr("data-content", data);
+        	$("#myteambutton"+itemID).popover('show');
+            	setTimeout(function(){
+            		$("#myteambutton"+itemID).popover('hide');
+            	},1000);
+        }
+      });
+	
+}
+
   //this fuction is for the auto complete too look up team mates when creating a project
   $( function() {
 	    var availableTags = <?= $userNamesList ?>;
@@ -299,230 +321,282 @@ function viewItem(itemID){
 	      source: availableTags
 	    });
 	  } );
-  
+
+  //this enables pop overs 
+  $(document).ready(function(){
+    $('[data-toggle="popover"]').popover(); 
+});
   
   </script>
 </head>
 <body>
-<!-- this is for ajax to load javascripts -->
-<div id="myScripts"></div>
+	<!-- this is for ajax to load javascripts -->
+	<div id="myScripts"></div>
 
-<!-- this is the veiw item modal -->
-<div class="modal fade" tabindex="-1" role="dialog" id="viewitemmodal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="viewitemtitle">Modal title</h4>
-      </div>
-      <div class="modal-body" id="viewitemcontent">
-        <p>One fine body&hellip;</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<!-- This ends the view item modal -->
+	<!-- this is the veiw item modal -->
+	<div class="modal fade" tabindex="-1" role="dialog" id="viewitemmodal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="viewitemtitle">Modal title</h4>
+				</div>
+				<div class="modal-body" id="viewitemcontent">
+					<p>One fine body&hellip;</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+	<!-- This ends the view item modal -->
 
-<!-- this is the modal to edit an item -->
-<div class="modal fade" tabindex="-1" role="dialog" id="editItemDial">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Edit Item</h4>
-      </div>
-      <div class="modal-body">
-        <!-- this begins the form -->
+	<!-- this is the modal to edit an item -->
+	<div class="modal fade" tabindex="-1" role="dialog" id="editItemDial">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">Edit Item</h4>
+				</div>
+				<div class="modal-body">
+					<!-- this begins the form -->
 
-  		<div class="form-group row">
-  			<label for="edititemurgency" class="col-sm-4 col-md-4 col-lg-4 col-form-label">urgency:</label>
-  			<div class="col-sm-8 col-md-8 col-lg-8 ">
-    			<input class="form-control" type="color" id="edititemurgency" value="#FFFFFF">
-  			</div>
-		</div>
-      	<div class="form-group row">
-  			<label for="edititemtitle" class="col-sm-4 col-md-4 col-lg-4 col-form-label">Title:</label>
-  			<div class="col-sm-8 col-md-8 col-lg-8 ">
-    			<input class="form-control" type="text" id="edititemtitle">
-  			</div>
-		</div>
-		<div class="form-group">
-    		<label for="edititemcontent">Content:</label>
-    		<textarea class="form-control" id="edititemcontent" rows="3"></textarea>
-  		</div>
+					<div class="form-group row">
+						<label for="edititemurgency"
+							class="col-sm-4 col-md-4 col-lg-4 col-form-label">urgency:</label>
+						<div class="col-sm-8 col-md-8 col-lg-8 ">
+							<input class="form-control" type="color" id="edititemurgency"
+								value="#FFFFFF">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="edititemtitle"
+							class="col-sm-4 col-md-4 col-lg-4 col-form-label">Title:</label>
+						<div class="col-sm-8 col-md-8 col-lg-8 ">
+							<input class="form-control" type="text" id="edititemtitle">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="edititemcontent">Content:</label>
+						<textarea class="form-control" id="edititemcontent" rows="3"></textarea>
+					</div>
 
-		<input type="hidden" id="edititemupdated" value="<?= $myDateString ?>">
-		<input type="hidden" id="edititemid" value="<?= $myDateString ?>">
-		
-		<div id="editItemErr"></div>
-			<!-- this ends the form -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="editItemSave" onclick="saveediteditem()"><span class="glyphicon glyphicon-floppy-disk"></span> Save Item</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+					<input type="hidden" id="edititemupdated"
+						value="<?= $myDateString ?>"> <input type="hidden" id="edititemid"
+						value="<?= $myDateString ?>">
 
-<!-- new project Modal -->
-<div class="modal fade" id="addProjectMod" tabindex="-1" role="dialog" aria-labelledby="AddProjectlabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="AddProjectlabel">Add Project</h4>
-      </div>
-      <div class="modal-body">
-      	<!-- this begins the form -->
-      	<div class="form-group row">
-  			<label for="projectName" class="col-sm-4 col-md-4 col-lg-4 col-form-label">Project Name:</label>
-  			<div class="col-sm-8 col-md-8 col-lg-8 ">
-    			<input class="form-control" type="text" id="projectName">
-  			</div>
+					<div id="editItemErr"></div>
+					<!-- this ends the form -->
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" id="editItemSave"
+						onclick="saveediteditem()">
+						<span class="glyphicon glyphicon-floppy-disk"></span> Save Item
+					</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
 		</div>
-		<div class="form-group row">
-  			<label for="userlookup" class="col-sm-4 col-md-4 col-lg-4  col-form-label"><span class="glyphicon glyphicon-search"></span> Lookup User:</label>
-  			<div class="col-sm-6 col-md-6 col-lg-6 ">
-    			<input class="form-control" type="text" id="userlookup">
-    		</div>
-  			<div class="col-sm-2 col-md-2 col-lg-2 ">
-  				<button type="button" class="btn btn-primary" onclick="addTeamMember()"><span class="glyphicon glyphicon-plus"></span> Add</button>
-  			</div>
-		</div>
-		<div class="form-group row">
-  			<label for="teamMembers" class="col-sm-4 col-md-4 col-lg-4 col-form-label">Team Members:</label>
-  			<div class="col-sm-8 col-md-8 col-lg-8 ">
-    			<input class="form-control" type="text" id="teamMembers">
-  			</div>
-		</div>
-		<div class="form-group row">
-  			<label for="deadline" class="col-sm-4 col-md-4 col-lg-4 col-form-label">Deadline:</label>
-  			<div class="col-sm-8 col-md-8 col-lg-8 ">
-    			<input class="form-control" type="text" id="deadline">
-  			</div>
-		</div>
-		<input type="hidden" id="created" value="<?= $myDateString ?>">
-		<div id="newProjectErr"></div>
-			<!-- this ends the form -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="newProjectSave" onclick="saveProject()"><span class="glyphicon glyphicon-floppy-disk"></span> Save Project</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- end new project Modal -->
-<!-- new item Modal -->
-<div class="modal fade" id="adddoingitem" tabindex="-1" role="dialog" aria-labelledby="additemlabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="additemlabel">Add Item</h4>
-      </div>
-      <div class="modal-body">
-      	<!-- this begins the form -->
-      	<div class="form-group">
-    		<label for="catagory">Select a catagory:</label>
-    		<select class="form-control" id="doingitemcatagory">
-      			<option>Plan</option>
-      			<option>Develop</option>
-      			<option>Test</option>
-      			<option>Deploy</option>
-    		</select>
-  		</div>
-  		<div class="form-group row">
-  			<label for="urgency" class="col-sm-4 col-md-4 col-lg-4 col-form-label">urgency:</label>
-  			<div class="col-sm-8 col-md-8 col-lg-8 ">
-    			<input class="form-control" type="color" id="doingitemurgency" value="#FFFFFF">
-  			</div>
-		</div>
-      	<div class="form-group row">
-  			<label for="title" class="col-sm-4 col-md-4 col-lg-4 col-form-label">Title:</label>
-  			<div class="col-sm-8 col-md-8 col-lg-8 ">
-    			<input class="form-control" type="text" id="doingitemtitle">
-  			</div>
-		</div>
-		<div class="form-group">
-    		<label for="content">Content:</label>
-    		<textarea class="form-control" id="doingitemcontent" rows="3"></textarea>
-  		</div>
-  		<input type="hidden" id="doingitemstatus" value="doing">
-		<input type="hidden" id="projectID" value="">
-		<input type="hidden" id="doingitemcreated" value="<?= $myDateString ?>">
-		<input type="hidden" id="doingitemupdated" value="<?= $myDateString ?>">
-		<input type="hidden" id="doingitemownerID" value="<?php echo Yii::$app->user->id;?>">
-		
-		<div id="doingItemErr"></div>
-			<!-- this ends the form -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="newProjectSave" onclick="saveDoingItem()"><span class="glyphicon glyphicon-floppy-disk"></span> Save Item</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- end new item Modal -->
-<div class="row">
-	<!-- this is the todo pannel -->
-	<div class="col-sm-2 col-md-2 col-lg-2 padding-0">
-		<div class="panel panel-default">
-  			<div class="panel-heading">
-    			<h3 class="panel-title">To Do</h3>
-  			</div>
-          	<div class="panel-body">
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
 
-                <ul id="todo" class="connectedSortable MyLists">
-					<?php 
-						foreach ($mytodo as $td){
-							
-							$todoItems = (new \yii\db\Query())
-							->select(['*'])
-							->from('items')
-							->where(['itemID' => $td["itemID"]])
-							->one();
-							$myAbstract=$todoItems["content"];
-							$myAbstract=substr($myAbstract,0,50);
-							
-							echo '<li id="'.$td["itemID"].'">
+	<!-- new project Modal -->
+	<div class="modal fade" id="addProjectMod" tabindex="-1" role="dialog"
+		aria-labelledby="AddProjectlabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="AddProjectlabel">Add Project</h4>
+				</div>
+				<div class="modal-body">
+					<!-- this begins the form -->
+					<div class="form-group row">
+						<label for="projectName"
+							class="col-sm-4 col-md-4 col-lg-4 col-form-label">Project Name:</label>
+						<div class="col-sm-8 col-md-8 col-lg-8 ">
+							<input class="form-control" type="text" id="projectName">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="userlookup"
+							class="col-sm-4 col-md-4 col-lg-4  col-form-label"><span
+							class="glyphicon glyphicon-search"></span> Lookup User:</label>
+						<div class="col-sm-6 col-md-6 col-lg-6 ">
+							<input class="form-control" type="text" id="userlookup">
+						</div>
+						<div class="col-sm-2 col-md-2 col-lg-2 ">
+							<button type="button" class="btn btn-primary"
+								onclick="addTeamMember()">
+								<span class="glyphicon glyphicon-plus"></span> Add
+							</button>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="teamMembers"
+							class="col-sm-4 col-md-4 col-lg-4 col-form-label">Team Members:</label>
+						<div class="col-sm-8 col-md-8 col-lg-8 ">
+							<input class="form-control" type="text" id="teamMembers">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="deadline"
+							class="col-sm-4 col-md-4 col-lg-4 col-form-label">Deadline:</label>
+						<div class="col-sm-8 col-md-8 col-lg-8 ">
+							<input class="form-control" type="text" id="deadline">
+						</div>
+					</div>
+					<input type="hidden" id="created" value="<?= $myDateString ?>">
+					<div id="newProjectErr"></div>
+					<!-- this ends the form -->
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" id="newProjectSave"
+						onclick="saveProject()">
+						<span class="glyphicon glyphicon-floppy-disk"></span> Save Project
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end new project Modal -->
+	<!-- new item Modal -->
+	<div class="modal fade" id="adddoingitem" tabindex="-1" role="dialog"
+		aria-labelledby="additemlabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="additemlabel">Add Item</h4>
+				</div>
+				<div class="modal-body">
+					<!-- this begins the form -->
+					<div class="form-group">
+						<label for="catagory">Select a catagory:</label> <select
+							class="form-control" id="doingitemcatagory">
+							<option>Plan</option>
+							<option>Develop</option>
+							<option>Test</option>
+							<option>Deploy</option>
+						</select>
+					</div>
+					<div class="form-group row">
+						<label for="urgency"
+							class="col-sm-4 col-md-4 col-lg-4 col-form-label">urgency:</label>
+						<div class="col-sm-8 col-md-8 col-lg-8 ">
+							<input class="form-control" type="color" id="doingitemurgency"
+								value="#FFFFFF">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="title"
+							class="col-sm-4 col-md-4 col-lg-4 col-form-label">Title:</label>
+						<div class="col-sm-8 col-md-8 col-lg-8 ">
+							<input class="form-control" type="text" id="doingitemtitle">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="content">Content:</label>
+						<textarea class="form-control" id="doingitemcontent" rows="3"></textarea>
+					</div>
+					<input type="hidden" id="doingitemstatus" value="doing"> <input
+						type="hidden" id="projectID" value=""> <input type="hidden"
+						id="doingitemcreated" value="<?= $myDateString ?>"> <input
+						type="hidden" id="doingitemupdated" value="<?= $myDateString ?>">
+					<input type="hidden" id="doingitemownerID"
+						value="<?php echo Yii::$app->user->id;?>">
+
+					<div id="doingItemErr"></div>
+					<!-- this ends the form -->
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" id="newProjectSave"
+						onclick="saveDoingItem()">
+						<span class="glyphicon glyphicon-floppy-disk"></span> Save Item
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end new item Modal -->
+	<div class="row">
+		<!-- this is the todo pannel -->
+		<div class="col-sm-2 col-md-2 col-lg-2 padding-0">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">To Do</h3>
+				</div>
+				<div class="panel-body">
+
+					<ul id="todo" class="connectedSortable MyLists">
+					<?php
+    foreach ($mytodo as $td) {
+        
+        $todoItems = (new \yii\db\Query())->select([
+            '*'
+        ])
+            ->from('items')
+            ->where([
+            'itemID' => $td["itemID"]
+        ])
+            ->one();
+        $myAbstract = $todoItems["content"];
+        $myAbstract = substr($myAbstract, 0, 50);
+        
+        echo '<li id="' . $td["itemID"] . '">
 
 <div class="panel panel-default">
-    <div class="panel-heading" id="title'.$td["itemID"].'">
-        '.$todoItems["title"].'
-        <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeitem('.$td["itemID"].')" onclick="removeitem('.$td["itemID"].')">
+    <div class="panel-heading" id="title' . $td["itemID"] . '">
+        ' . $todoItems["title"] . '
+        <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeitem(' . $td["itemID"] . ')" onclick="removeitem(' . $td["itemID"] . ')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
 
-    <div class="panel-body" style="background-color:'.$td["urgency"].';" id="content'.$td["itemID"].'">
-        '.$myAbstract.'
+    <div class="panel-body" style="background-color:' . $td["urgency"] . ';" id="content' . $td["itemID"] . '">
+        ' . $myAbstract . '
     </div>
 
     <div class="panel-footer">
        <div class="btn-group" role="group" aria-label="options">
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage('.$td["itemID"].')" onclick="addMessage('.$td["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage(' . $td["itemID"] . ')" onclick="addMessage(' . $td["itemID"] . ')">
                     <span class="glyphicon glyphicon-comment"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage('.$td["itemID"].')" onclick="viewMessage('.$td["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage(' . $td["itemID"] . ')" onclick="viewMessage(' . $td["itemID"] . ')">
                     <span class="glyphicon glyphicon-envelope"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addTeam('.$td["itemID"].')" onclick="addTeam('.$td["itemID"].')">
+                <button type="button" id="myteambutton' . $td["itemID"] . '" class="btn btn-xs btn-primary" ontouchstart="addTeam(' . $td["itemID"] . ')" onclick="addTeam(' . $td["itemID"] . ')" data-container="body" data-placement="bottom" data-content="test">
                     <span class="glyphicon glyphicon-user"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem('.$td["itemID"].')" onclick="editItem('.$td["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem(' . $td["itemID"] . ')" onclick="editItem(' . $td["itemID"] . ')">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem('.$td["itemID"].')" onclick="viewItem('.$td["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem(' . $td["itemID"] . ')" onclick="viewItem(' . $td["itemID"] . ')">
                     <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
@@ -530,43 +604,43 @@ function viewItem(itemID){
 </div>
 										
 								</li>';
-							
-						}
-					?>
+    }
+    ?>
                 </ul>
- 
-          	</div>
+
+				</div>
+			</div>
 		</div>
-	</div>
-	<!-- this is the doing pannel -->
-	<div class="col-sm-8 col-md-8 col-lg-8 padding-0">
-	
-		<div class="panel panel-default">
-  			<div class="panel-heading nopadds" id="doinghead">
-    			<span class="panel-title">Doing</span>
-    			<button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#addProjectMod">
-      				<span class="glyphicon glyphicon-file"></span> New Project
-    			</button>
-  			</div>
-          	<div class="panel-body">
-          		<!-- This begins the sortable pannels -->
-          		<ul id="pannelSort">
-          			<?php 
-          			foreach($projects as $p) {
-          				//var_dump($p);
-          				
-          				echo'
-					<li id="project'.$p["projectID"].'">
+		<!-- this is the doing pannel -->
+		<div class="col-sm-8 col-md-8 col-lg-8 padding-0">
+
+			<div class="panel panel-default">
+				<div class="panel-heading nopadds" id="doinghead">
+					<span class="panel-title">Doing</span>
+					<button type="button" class="btn btn-default pull-right"
+						data-toggle="modal" data-target="#addProjectMod">
+						<span class="glyphicon glyphicon-file"></span> New Project
+					</button>
+				</div>
+				<div class="panel-body">
+					<!-- This begins the sortable pannels -->
+					<ul id="pannelSort">
+          			<?php
+            foreach ($projects as $p) {
+                // var_dump($p);
+                
+                echo '
+					<li id="project' . $p["projectID"] . '">
         				<div class="panel panel-default">
                   			<div class="panel-heading">
                     			<span class="panel-title">
                     				<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
-                    				'.$p["name"].'
+                    				' . $p["name"] . '
                     			</span>
-                            <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeProject('.$p["projectID"].')" onclick="removeProject('.$p["projectID"].')">
+                            <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeProject(' . $p["projectID"] . ')" onclick="removeProject(' . $p["projectID"] . ')">
                                 <span class="glyphicon glyphicon-remove"></span>
                             </button>
-							<button type="button" ontouchstart="changeProjectID('.$p["projectID"].');" onclick="changeProjectID('.$p["projectID"].');" class="btn btn-xs pull-right" data-toggle="modal" data-target="#adddoingitem">
+							<button type="button" ontouchstart="changeProjectID(' . $p["projectID"] . ');" onclick="changeProjectID(' . $p["projectID"] . ');" class="btn btn-xs pull-right" data-toggle="modal" data-target="#adddoingitem">
       								<span class="glyphicon glyphicon-list-alt"></span> Add Item
     							</button>
                   			</div>
@@ -580,55 +654,64 @@ function viewItem(itemID){
         								<div class="panel panel-default">
                                           <div class="panel-heading">Plan</div>
                                           <div class="panel-body">';
-					          				$plans = (new \yii\db\Query())
-					          				->select(['itemID','urgency'])
-					          				->from('itemStatus')
-					          				->where(['projectID' => $p["projectID"],'catagory'=>'Plan','status'=>'doing'])
-					          				->all();
-					          		echo '<ul id="Plan'.$p["projectID"].'" class="connectedSortable MyLists">';
-					          				
-					          				foreach($plans as $pl){
-					          					//var_dump($pl);
-					          					$planItems = (new \yii\db\Query())
-					          					->select(['*'])
-					          					->from('items')
-					          					->where(['itemID' => $pl["itemID"]])
-					          					->one();
-					          					$myAbstract=$planItems["content"];
-					          					$myAbstract=substr($myAbstract,0,50);
-					          					echo '<li id="'.$pl["itemID"].'">
+                $plans = (new \yii\db\Query())->select([
+                    'itemID',
+                    'urgency'
+                ])
+                    ->from('itemStatus')
+                    ->where([
+                    'projectID' => $p["projectID"],
+                    'catagory' => 'Plan',
+                    'status' => 'doing'
+                ])
+                    ->all();
+                echo '<ul id="Plan' . $p["projectID"] . '" class="connectedSortable MyLists">';
+                
+                foreach ($plans as $pl) {
+                    // var_dump($pl);
+                    $planItems = (new \yii\db\Query())->select([
+                        '*'
+                    ])
+                        ->from('items')
+                        ->where([
+                        'itemID' => $pl["itemID"]
+                    ])
+                        ->one();
+                    $myAbstract = $planItems["content"];
+                    $myAbstract = substr($myAbstract, 0, 50);
+                    echo '<li id="' . $pl["itemID"] . '">
 			              
 <div class="panel panel-default">
-    <div class="panel-heading" id="title'.$pl["itemID"].'">
-        '.$planItems["title"].'
-        <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeitem('.$pl["itemID"].')" onclick="removeitem('.$pl["itemID"].')">
+    <div class="panel-heading" id="title' . $pl["itemID"] . '">
+        ' . $planItems["title"] . '
+        <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeitem(' . $pl["itemID"] . ')" onclick="removeitem(' . $pl["itemID"] . ')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
 							    
-    <div class="panel-body" style="background-color:'.$pl["urgency"].';" id="content'.$pl["itemID"].'">
-        '.$myAbstract.'
+    <div class="panel-body" style="background-color:' . $pl["urgency"] . ';" id="content' . $pl["itemID"] . '">
+        ' . $myAbstract . '
     </div>
       
     <div class="panel-footer">
        <div class="btn-group" role="group" aria-label="options">
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage('.$pl["itemID"].')" onclick="addMessage('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage(' . $pl["itemID"] . ')" onclick="addMessage(' . $pl["itemID"] . ')">
                     <span class="glyphicon glyphicon-comment"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage('.$pl["itemID"].')" onclick="viewMessage('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage(' . $pl["itemID"] . ')" onclick="viewMessage(' . $pl["itemID"] . ')">
                     <span class="glyphicon glyphicon-envelope"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addTeam('.$pl["itemID"].')" onclick="addTeam('.$pl["itemID"].')">
+               <button type="button" id="myteambutton' . $pl["itemID"] . '" class="btn btn-xs btn-primary" ontouchstart="addTeam(' . $pl["itemID"] . ')" onclick="addTeam(' . $pl["itemID"] . ')" data-container="body" data-placement="bottom" data-content="test">
                     <span class="glyphicon glyphicon-user"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem('.$pl["itemID"].')" onclick="editItem('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem(' . $pl["itemID"] . ')" onclick="editItem(' . $pl["itemID"] . ')">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem('.$pl["itemID"].')" onclick="viewItem('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem(' . $pl["itemID"] . ')" onclick="viewItem(' . $pl["itemID"] . ')">
                     <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
@@ -636,10 +719,9 @@ function viewItem(itemID){
 </div>
                       
 								</li>';
-					          					
-					          					}
-					
-                           	 echo '       </ul>
+                }
+                
+                echo '       </ul>
 										</div>
                                         </div>
                                     </div>
@@ -649,55 +731,64 @@ function viewItem(itemID){
         								<div class="panel panel-default">
                                           <div class="panel-heading">Develop</div>
                                           <div class="panel-body">';
-					          				$plans = (new \yii\db\Query())
-					          				->select(['itemID','urgency'])
-					          				->from('itemStatus')
-					          				->where(['projectID' => $p["projectID"],'catagory'=>'Develop','status'=>'doing'])
-					          				->all();
-					          		echo '<ul id="Develop'.$p["projectID"].'" class="connectedSortable MyLists">';
-					          				
-					          				foreach($plans as $pl){
-					          					//var_dump($pl);
-					          					$planItems = (new \yii\db\Query())
-					          					->select(['*'])
-					          					->from('items')
-					          					->where(['itemID' => $pl["itemID"]])
-					          					->one();
-					          					$myAbstract=$planItems["content"];
-					          					$myAbstract=substr($myAbstract,0,50);
-					          					echo '<li id="'.$pl["itemID"].'">
+                $plans = (new \yii\db\Query())->select([
+                    'itemID',
+                    'urgency'
+                ])
+                    ->from('itemStatus')
+                    ->where([
+                    'projectID' => $p["projectID"],
+                    'catagory' => 'Develop',
+                    'status' => 'doing'
+                ])
+                    ->all();
+                echo '<ul id="Develop' . $p["projectID"] . '" class="connectedSortable MyLists">';
+                
+                foreach ($plans as $pl) {
+                    // var_dump($pl);
+                    $planItems = (new \yii\db\Query())->select([
+                        '*'
+                    ])
+                        ->from('items')
+                        ->where([
+                        'itemID' => $pl["itemID"]
+                    ])
+                        ->one();
+                    $myAbstract = $planItems["content"];
+                    $myAbstract = substr($myAbstract, 0, 50);
+                    echo '<li id="' . $pl["itemID"] . '">
 				    
 <div class="panel panel-default">
-    <div class="panel-heading" id="title'.$pl["itemID"].'">
-        '.$planItems["title"].'
-        <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeitem('.$pl["itemID"].')" onclick="removeitem('.$pl["itemID"].')">
+    <div class="panel-heading" id="title' . $pl["itemID"] . '">
+        ' . $planItems["title"] . '
+        <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeitem(' . $pl["itemID"] . ')" onclick="removeitem(' . $pl["itemID"] . ')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
             
-    <div class="panel-body" style="background-color:'.$pl["urgency"].';" id="content'.$pl["itemID"].'">
-        '.$myAbstract.'
+    <div class="panel-body" style="background-color:' . $pl["urgency"] . ';" id="content' . $pl["itemID"] . '">
+        ' . $myAbstract . '
     </div>
   	    
     <div class="panel-footer">
        <div class="btn-group" role="group" aria-label="options">
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage('.$pl["itemID"].')" onclick="addMessage('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage(' . $pl["itemID"] . ')" onclick="addMessage(' . $pl["itemID"] . ')">
                     <span class="glyphicon glyphicon-comment"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage('.$pl["itemID"].')" onclick="viewMessage('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage(' . $pl["itemID"] . ')" onclick="viewMessage(' . $pl["itemID"] . ')">
                     <span class="glyphicon glyphicon-envelope"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addTeam('.$pl["itemID"].')" onclick="addTeam('.$pl["itemID"].')">
+               <button type="button" id="myteambutton' . $pl["itemID"] . '" class="btn btn-xs btn-primary" ontouchstart="addTeam(' . $pl["itemID"] . ')" onclick="addTeam(' . $pl["itemID"] . ')" data-container="body" data-placement="bottom" data-content="test">
                     <span class="glyphicon glyphicon-user"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem('.$pl["itemID"].')" onclick="editItem('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem(' . $pl["itemID"] . ')" onclick="editItem(' . $pl["itemID"] . ')">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem('.$pl["itemID"].')" onclick="viewItem('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem(' . $pl["itemID"] . ')" onclick="viewItem(' . $pl["itemID"] . ')">
                     <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
@@ -705,10 +796,9 @@ function viewItem(itemID){
 </div>
     
 								</li>';
-					          					
-					          					}
-					
-                           	 echo '       </ul>
+                }
+                
+                echo '       </ul>
 
                                           </div>
                                         </div>
@@ -719,55 +809,64 @@ function viewItem(itemID){
         								<div class="panel panel-default">
                                           <div class="panel-heading">Test</div>
                                           <div class="panel-body">';
-					          				$plans = (new \yii\db\Query())
-					          				->select(['itemID','urgency'])
-					          				->from('itemStatus')
-					          				->where(['projectID' => $p["projectID"],'catagory'=>'Test','status'=>'doing'])
-					          				->all();
-					          		echo '<ul id="Test'.$p["projectID"].'" class="connectedSortable MyLists">';
-					          				
-					          				foreach($plans as $pl){
-					          					//var_dump($pl);
-					          					$planItems = (new \yii\db\Query())
-					          					->select(['*'])
-					          					->from('items')
-					          					->where(['itemID' => $pl["itemID"]])
-					          					->one();
-					          					$myAbstract=$planItems["content"];
-					          					$myAbstract=substr($myAbstract,0,50);
-					          					echo '<li id="'.$pl["itemID"].'">
+                $plans = (new \yii\db\Query())->select([
+                    'itemID',
+                    'urgency'
+                ])
+                    ->from('itemStatus')
+                    ->where([
+                    'projectID' => $p["projectID"],
+                    'catagory' => 'Test',
+                    'status' => 'doing'
+                ])
+                    ->all();
+                echo '<ul id="Test' . $p["projectID"] . '" class="connectedSortable MyLists">';
+                
+                foreach ($plans as $pl) {
+                    // var_dump($pl);
+                    $planItems = (new \yii\db\Query())->select([
+                        '*'
+                    ])
+                        ->from('items')
+                        ->where([
+                        'itemID' => $pl["itemID"]
+                    ])
+                        ->one();
+                    $myAbstract = $planItems["content"];
+                    $myAbstract = substr($myAbstract, 0, 50);
+                    echo '<li id="' . $pl["itemID"] . '">
   			    
 <div class="panel panel-default">
-    <div class="panel-heading" id="title'.$pl["itemID"].'">
-        '.$planItems["title"].'
-        <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeitem('.$pl["itemID"].')" onclick="removeitem('.$pl["itemID"].')">
+    <div class="panel-heading" id="title' . $pl["itemID"] . '">
+        ' . $planItems["title"] . '
+        <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeitem(' . $pl["itemID"] . ')" onclick="removeitem(' . $pl["itemID"] . ')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
 		    
-    <div class="panel-body" style="background-color:'.$pl["urgency"].';" id="content'.$pl["itemID"].'">
-        '.$myAbstract.'
+    <div class="panel-body" style="background-color:' . $pl["urgency"] . ';" id="content' . $pl["itemID"] . '">
+        ' . $myAbstract . '
     </div>
             
     <div class="panel-footer">
        <div class="btn-group" role="group" aria-label="options">
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage('.$pl["itemID"].')" onclick="addMessage('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage(' . $pl["itemID"] . ')" onclick="addMessage(' . $pl["itemID"] . ')">
                     <span class="glyphicon glyphicon-comment"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage('.$pl["itemID"].')" onclick="viewMessage('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage(' . $pl["itemID"] . ')" onclick="viewMessage(' . $pl["itemID"] . ')">
                     <span class="glyphicon glyphicon-envelope"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addTeam('.$pl["itemID"].')" onclick="addTeam('.$pl["itemID"].')">
+               <button type="button" id="myteambutton' . $pl["itemID"] . '" class="btn btn-xs btn-primary" ontouchstart="addTeam(' . $pl["itemID"] . ')" onclick="addTeam(' . $pl["itemID"] . ')" data-container="body" data-placement="bottom" data-content="test">
                     <span class="glyphicon glyphicon-user"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem('.$pl["itemID"].')" onclick="editItem('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem(' . $pl["itemID"] . ')" onclick="editItem(' . $pl["itemID"] . ')">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem('.$pl["itemID"].')" onclick="viewItem('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem(' . $pl["itemID"] . ')" onclick="viewItem(' . $pl["itemID"] . ')">
                     <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
@@ -775,10 +874,9 @@ function viewItem(itemID){
 </div>
       			    
 								</li>';
-					          					
-					          					}
-					
-                           	 echo '       </ul>
+                }
+                
+                echo '       </ul>
 
                                           </div>
                                         </div>
@@ -789,55 +887,64 @@ function viewItem(itemID){
         								<div class="panel panel-default">
                                           <div class="panel-heading">Deploy</div>
                                           <div class="panel-body">';
-					          				$plans = (new \yii\db\Query())
-					          				->select(['itemID','urgency'])
-					          				->from('itemStatus')
-					          				->where(['projectID' => $p["projectID"],'catagory'=>'Deploy','status'=>'doing'])
-					          				->all();
-					          		echo '<ul id="Deploy'.$p["projectID"].'" class="connectedSortable MyLists">';
-					          				
-					          				foreach($plans as $pl){
-					          					//var_dump($pl);
-					          					$planItems = (new \yii\db\Query())
-					          					->select(['*'])
-					          					->from('items')
-					          					->where(['itemID' => $pl["itemID"]])
-					          					->one();
-					          					$myAbstract=$planItems["content"];
-					          					$myAbstract=substr($myAbstract,0,50);
-					          					echo '<li id="'.$pl["itemID"].'">
+                $plans = (new \yii\db\Query())->select([
+                    'itemID',
+                    'urgency'
+                ])
+                    ->from('itemStatus')
+                    ->where([
+                    'projectID' => $p["projectID"],
+                    'catagory' => 'Deploy',
+                    'status' => 'doing'
+                ])
+                    ->all();
+                echo '<ul id="Deploy' . $p["projectID"] . '" class="connectedSortable MyLists">';
+                
+                foreach ($plans as $pl) {
+                    // var_dump($pl);
+                    $planItems = (new \yii\db\Query())->select([
+                        '*'
+                    ])
+                        ->from('items')
+                        ->where([
+                        'itemID' => $pl["itemID"]
+                    ])
+                        ->one();
+                    $myAbstract = $planItems["content"];
+                    $myAbstract = substr($myAbstract, 0, 50);
+                    echo '<li id="' . $pl["itemID"] . '">
     
 <div class="panel panel-default">
-    <div class="panel-heading" id="title'.$pl["itemID"].'">
-        '.$planItems["title"].'
-        <button type="button" class="btn btn-xs btn-danger  pull-right"  ontouchstart="removeitem('.$pl["itemID"].')"  onclick="removeitem('.$pl["itemID"].')">
+    <div class="panel-heading" id="title' . $pl["itemID"] . '">
+        ' . $planItems["title"] . '
+        <button type="button" class="btn btn-xs btn-danger  pull-right"  ontouchstart="removeitem(' . $pl["itemID"] . ')"  onclick="removeitem(' . $pl["itemID"] . ')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
     			    
-    <div class="panel-body" style="background-color:'.$pl["urgency"].';" id="content'.$pl["itemID"].'">
-        '.$myAbstract.'
+    <div class="panel-body" style="background-color:' . $pl["urgency"] . ';" id="content' . $pl["itemID"] . '">
+        ' . $myAbstract . '
     </div>
 							    
     <div class="panel-footer">
        <div class="btn-group" role="group" aria-label="options">
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage('.$pl["itemID"].')" onclick="addMessage('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage(' . $pl["itemID"] . ')" onclick="addMessage(' . $pl["itemID"] . ')">
                     <span class="glyphicon glyphicon-comment"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage('.$pl["itemID"].')" onclick="viewMessage('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage(' . $pl["itemID"] . ')" onclick="viewMessage(' . $pl["itemID"] . ')">
                     <span class="glyphicon glyphicon-envelope"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addTeam('.$pl["itemID"].')" onclick="addTeam('.$pl["itemID"].')">
+               <button type="button" id="myteambutton' . $pl["itemID"] . '" class="btn btn-xs btn-primary" ontouchstart="addTeam(' . $pl["itemID"] . ')" onclick="addTeam(' . $pl["itemID"] . ')" data-container="body" data-placement="bottom" data-content="test">
                     <span class="glyphicon glyphicon-user"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem('.$pl["itemID"].')" onclick="editItem('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem(' . $pl["itemID"] . ')" onclick="editItem(' . $pl["itemID"] . ')">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem('.$pl["itemID"].')" onclick="viewItem('.$pl["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem(' . $pl["itemID"] . ')" onclick="viewItem(' . $pl["itemID"] . ')">
                     <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
@@ -845,10 +952,9 @@ function viewItem(itemID){
 </div>
                     
 								</li>';
-					          					
-					          					}
-					
-                           	 echo '       </ul>
+                }
+                
+                echo '       </ul>
 
                                           </div>
                                         </div>
@@ -858,9 +964,9 @@ function viewItem(itemID){
 								<!--end project catagories -->
 								<!--project details-->
 								<div class="row">
-									<span class="well"> Created:'.$p["dateCreated"].'</span>
-									<span class="well"> Due:'.$p["deadline"].'</span>
-									<span class="well">Project Members:'.$p["members"].'</span>
+									<span class="well"> Created:' . $p["dateCreated"] . '</span>
+									<span class="well"> Due:' . $p["deadline"] . '</span>
+									<span class="well">Project Members:' . $p["members"] . '</span>
 								</div>
                           	</div>
                 		</div>
@@ -873,9 +979,8 @@ function viewItem(itemID){
 
 
 ';
-          					
-          			}
-          			?>
+            }
+            ?>
     				<!-- this is a project pannel 
     				<li>
         				<div class="panel panel-default">
@@ -959,66 +1064,69 @@ function viewItem(itemID){
                 		</div>
             		</li>
             		<!-- end project pannel -->
-            		
-            		
- 				</ul>
- 				<!-- This ends the sortable pannels -->
-          	</div>
-		</div>
-	</div>
-	
-	<!-- this is the done pannel -->
-	<div class="col-sm-2 col-md-2 col-lg-2 padding-0">
-		<div class="panel panel-default">
-  			<div class="panel-heading">
-    			<h3 class="panel-title">Done</h3>
-  			</div>
-          	<div class="panel-body">
-            	  <ul id="done" class="connectedSortable MyLists">
-					<?php
-					foreach ($mydone as $d){
-						
-						$doneItems = (new \yii\db\Query())
-						->select(['*'])
-						->from('items')
-						->where(['itemID' => $d["itemID"]])
-						->one();
-						$myAbstract=$doneItems["content"];
-						$myAbstract=substr($myAbstract,0,50);
 
-						echo '<li id="'.$d["itemID"].'">
+
+					</ul>
+					<!-- This ends the sortable pannels -->
+				</div>
+			</div>
+		</div>
+
+		<!-- this is the done pannel -->
+		<div class="col-sm-2 col-md-2 col-lg-2 padding-0">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Done</h3>
+				</div>
+				<div class="panel-body">
+					<ul id="done" class="connectedSortable MyLists">
+					<?php
+    foreach ($mydone as $d) {
+        
+        $doneItems = (new \yii\db\Query())->select([
+            '*'
+        ])
+            ->from('items')
+            ->where([
+            'itemID' => $d["itemID"]
+        ])
+            ->one();
+        $myAbstract = $doneItems["content"];
+        $myAbstract = substr($myAbstract, 0, 50);
+        
+        echo '<li id="' . $d["itemID"] . '">
         
 <div class="panel panel-default">
-    <div class="panel-heading" id="title'.$d["itemID"].'">
-        '.$doneItems["title"].'
-        <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeitem('.$d["itemID"].')" onclick="removeitem('.$d["itemID"].')">
+    <div class="panel-heading" id="title' . $d["itemID"] . '">
+        ' . $doneItems["title"] . '
+        <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeitem(' . $d["itemID"] . ')" onclick="removeitem(' . $d["itemID"] . ')">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </div>
         
-    <div class="panel-body" style="background-color:'.$d["urgency"].';" id="content'.$d["itemID"].'">
-        '.$myAbstract.'
+    <div class="panel-body" style="background-color:' . $d["urgency"] . ';" id="content' . $d["itemID"] . '">
+        ' . $myAbstract . '
     </div>
       
     <div class="panel-footer">
        <div class="btn-group" role="group" aria-label="options">
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage('.$d["itemID"].')" onclick="addMessage('.$d["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addMessage(' . $d["itemID"] . ')" onclick="addMessage(' . $d["itemID"] . ')">
                     <span class="glyphicon glyphicon-comment"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage('.$d["itemID"].')" onclick="viewMessage('.$d["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewMessage(' . $d["itemID"] . ')" onclick="viewMessage(' . $d["itemID"] . ')">
                     <span class="glyphicon glyphicon-envelope"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="addTeam('.$d["itemID"].')" onclick="addTeam('.$d["itemID"].')">
+               <button type="button" id="myteambutton' . $d["itemID"] . '" class="btn btn-xs btn-primary" ontouchstart="addTeam(' . $d["itemID"] . ')" onclick="addTeam(' . $d["itemID"] . ')" data-container="body" data-placement="bottom" data-content="test">
                     <span class="glyphicon glyphicon-user"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem('.$d["itemID"].')" onclick="editItem('.$d["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="editItem(' . $d["itemID"] . ')" onclick="editItem(' . $d["itemID"] . ')">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
 
-                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem('.$d["itemID"].')" onclick="viewItem('.$d["itemID"].')">
+                <button type="button" class="btn btn-xs btn-primary" ontouchstart="viewItem(' . $d["itemID"] . ')" onclick="viewItem(' . $d["itemID"] . ')">
                     <span class="glyphicon glyphicon-fullscreen"></span>
                 </button>
         </div>
@@ -1031,12 +1139,12 @@ function viewItem(itemID){
 				
 					?>
                 </ul>
-          	</div>
+				</div>
+			</div>
 		</div>
+
 	</div>
-	
-</div>
- 
- 
+
+
 </body>
 </html>
