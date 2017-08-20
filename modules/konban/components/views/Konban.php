@@ -566,7 +566,7 @@ function viewItem(itemID){
                             <button type="button" class="btn btn-xs btn-danger  pull-right" ontouchstart="removeProject('.$p["projectID"].')" onclick="removeProject('.$p["projectID"].')">
                                 <span class="glyphicon glyphicon-remove"></span>
                             </button>
-							<button type="button" onclick="changeProjectID('.$p["projectID"].');" class="btn btn-xs pull-right" data-toggle="modal" data-target="#adddoingitem">
+							<button type="button" ontouchstart="changeProjectID('.$p["projectID"].');" onclick="changeProjectID('.$p["projectID"].');" class="btn btn-xs pull-right" data-toggle="modal" data-target="#adddoingitem">
       								<span class="glyphicon glyphicon-list-alt"></span> Add Item
     							</button>
                   			</div>
