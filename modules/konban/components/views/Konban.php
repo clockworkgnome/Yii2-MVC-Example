@@ -272,6 +272,26 @@ function removeProject(pID){
 	
 }
 
+//this code is for the view item modal
+function viewItem(itemID){
+	$.ajax({
+        url: "<?= Url::toRoute("/konban/default/getitemdetails")?>",
+        data: {'itemID':itemID},
+        context: document.body,
+        type: "GET",
+        success: function(data) {
+        		var mydata=data.split("---");
+        		$('#viewitemmodal').modal('toggle');
+        		$('#viewitemcontent').css("background-color",mydata[1]);
+        		$('#viewitemtitle').html(mydata[2]);
+        		$('#viewitemcontent').html(mydata[3]);
+        		
+        	
+        }
+      });
+	
+}
+
   //this fuction is for the auto complete too look up team mates when creating a project
   $( function() {
 	    var availableTags = <?= $userNamesList ?>;
@@ -286,6 +306,25 @@ function removeProject(pID){
 <body>
 <!-- this is for ajax to load javascripts -->
 <div id="myScripts"></div>
+
+<!-- this is the veiw item modal -->
+<div class="modal fade" tabindex="-1" role="dialog" id="viewitemmodal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="viewitemtitle">Modal title</h4>
+      </div>
+      <div class="modal-body" id="viewitemcontent">
+        <p>One fine body&hellip;</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- This ends the view item modal -->
 
 <!-- this is the modal to edit an item -->
 <div class="modal fade" tabindex="-1" role="dialog" id="editItemDial">
