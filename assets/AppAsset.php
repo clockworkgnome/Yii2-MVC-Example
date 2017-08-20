@@ -24,7 +24,8 @@ class AppAsset extends AssetBundle
 	public $js = [
 			'js/jqueryui/external/jquery/jquery.js',
 			'js/jqueryui/jquery-ui.min.js',
-	        'js/jquery.ui.touch-punch.min.js'
+	        'js/jquery.ui.touch-punch.min.js',
+	        'js/touche/src/touche.js'
 	];
 	public $depends = [
 			'yii\web\YiiAsset',
