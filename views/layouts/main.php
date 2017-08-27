@@ -45,6 +45,7 @@ AppAsset::register($this);
     		['label' => 'About', 'url' => ['/site/about'],'linkOptions' => ['class' => 'myLinks']],
     		['label' => 'Contact', 'url' => ['/site/contact'],'linkOptions' => ['class' => 'myLinks']],
     		['label' => 'Projects', 'url' => ['/konban/default/index'],'linkOptions' => ['class' => 'myLinks']],
+        ['label' => 'Graphic Design', 'url' => ['/graphics/default/index'],'linkOptions' => ['class' => 'myLinks']],
     ];
     if (Yii::$app->user->isGuest) {
     	$menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup'],'linkOptions' => ['class' => 'myLinks']];
