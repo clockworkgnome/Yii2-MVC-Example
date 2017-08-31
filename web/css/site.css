@@ -149,6 +149,17 @@ color: #FFFFFF;
 	background-color: #71EEB8;
 
 	}
+	.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus{
+	background-color: #0B504F;
+	color: #FFFFFF;
+	}
+	.dropdown-menu > li > a {
+	color: #FFFFFF;
+	}
+	.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+		background-color: #0B504F;
+	color: #FFFFFF;
+	}
 .well{
 	background-color:rgba(40, 251, 142, 0.64);
 	color:#FFFFFF;
@@ -192,7 +203,7 @@ color: #FFFFFF;
 .navbar-toggle{
 	width:50px;
 	height:50px;
-	background-image: url("../img/logo-50.png");
+	background-image: url("../img/ham.png");
     background-repeat: no-repeat;
 
 }

@@ -141,7 +141,14 @@ class SiteController extends Controller
 	{
 		return $this->render('about');
 	}
-	
+	public function actionCancel()
+	{
+	    return $this->render('cancel');
+	}
+	public function actionSucess()
+	{
+	    return $this->render('sucess');
+	}
 	/**
 	 * Signs user up.
 	 *

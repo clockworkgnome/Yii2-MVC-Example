@@ -44,9 +44,20 @@ AppAsset::register($this);
     		['label' => 'Home', 'url' => ['/site/index'],'linkOptions' => ['class' => 'myLinks']],
     		['label' => 'About', 'url' => ['/site/about'],'linkOptions' => ['class' => 'myLinks']],
     		['label' => 'Contact', 'url' => ['/site/contact'],'linkOptions' => ['class' => 'myLinks']],
-    		['label' => 'KonBan', 'url' => ['/konban/default/index'],'linkOptions' => ['class' => 'myLinks']],
-        ['label' => 'Projects', 'url' => ['/graphics/default/index'],'linkOptions' => ['class' => 'myLinks']],
-        ['label' => 'Wordpress Help', 'url' => ['/wordpress/default/index'],'linkOptions' => ['class' => 'myLinks']],
+        ['label' => 'Projects', 
+            'url' => ['/graphics/default/index'],'linkOptions' => ['class' => 'myLinks'],
+            'items'=>[
+                        ['label'=>'Gallery','url' => ['/graphics/default/index'],'linkOptions' => ['class' => 'myLinks']],
+                        ['label' => 'KonBan', 'url' => ['/konban/default/index'],'linkOptions' => ['class' => 'myLinks']],
+            ],
+       ],
+        ['label' => 'Services',
+            'url' => ['/wordpress/default/index'],'linkOptions' => ['class' => 'myLinks'],
+            'items'=>[
+                        ['label' => 'Wordpress Help', 'url' => ['/wordpress/default/index'],'linkOptions' => ['class' => 'myLinks']],
+    
+                ]
+         ],
     ];
     if (Yii::$app->user->isGuest) {
     	$menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup'],'linkOptions' => ['class' => 'myLinks']];
